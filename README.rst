@@ -1,5 +1,5 @@
 Welcome to Host the Docs
-===========
+========================
 
 Host the Docs is a simple way to host static code documentation. Its main use is as a self-hosted server for your organization's private documentation. Better alternatives are available for open source projects, such as Read the Docs or Github Pages.
 
@@ -8,9 +8,10 @@ Host the Docs was created after a long day of banging my head against the wall t
 Seriously, let other people generate their own docs, I just want to Host the Docs!
 
 Running the server
-====
+------------------
 
 Host the Docs is built with Flask, so it should be easy enough to set up and run, even if you aren't a competent web programmer. You don't even have to run Host the Docs with Apache or whatever WSGI server of your choice, even though I recommend it. Run the first command to use a gevent webserver, and the second to use the builtin Flask reloading server.
+::
 
     $ python runserver.py
     $ python runserver.py --config DEV
@@ -18,7 +19,7 @@ Host the Docs is built with Flask, so it should be easy enough to set up and run
 Under the hood, the server uses a SQLlite DB to cache information, like what docs are available. There's no DB server to run or configure. Host the Docs just uses files for pretty much everything.
 
 Uploading your docs
-===
+-------------------
 
 There's a single URL endpoint, ``/hmfd`` (easy to remember: "host my fucking docs"). You give it a JSON document containing some simple metadata::
 
@@ -33,7 +34,7 @@ And a ``.zip`` file that has an ``index.html`` file in the root.
 After you upload new docs, they should show up on the Host the Docs homepage, either as a new project, or a new version.
 
 Administration
-===
+--------------
 
 The only administration is to remove projects or versions. Just SSH or RDP and delete the folders. A web-based interface can be added in the future, but that would probably require some security model so whatever!
 
