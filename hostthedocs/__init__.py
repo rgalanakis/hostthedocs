@@ -1,14 +1,24 @@
 from flask import Flask, jsonify, render_template, request
 
-from .filekeeper import parse_docfiles, unpack_project
+from .filekeeper import delete_files, parse_docfiles, unpack_project
 from . import getconfig
 
 app = Flask(__name__)
 
-@app.route('/hmfd', methods=['POST'])
+@app.route('/hmfd', methods=['POST', 'DELETE'])
 def hmfd():
-    unpack_project(request.files.values()[0].stream, request.form, getconfig.docfiles_dir)
-    return jsonify({'success': True})
+    success = False
+    if request.method == 'POST':
+        unpack_project(request.files.values()[0].stream, request.form, getconfig.docfiles_dir)
+        success = True
+    else:
+        assert request.method == 'DELETE'
+        delete_files(
+            request.form['name'],
+            request.form['version'],
+            getconfig.docfiles_dir,
+            request.form.get('entire_project'))
+    return jsonify({'success': success})
 
 
 @app.route('/')

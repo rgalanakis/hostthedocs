@@ -1,4 +1,5 @@
 import os
+import shutil
 import zipfile
 
 DEFAULT_PROJECT_DESCRIPTION = '<No project description>'
@@ -79,3 +80,11 @@ def valid_version(s):
         if not (c.isalnum() or c == '.'):
             return False
     return True
+
+
+def delete_files(name, version, docfiles_dir, entire_project=False):
+    remove = os.path.join(docfiles_dir, name)
+    if not entire_project:
+        remove = os.path.join(remove, version)
+    if os.path.exists(remove):
+        shutil.rmtree(remove)
