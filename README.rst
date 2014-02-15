@@ -52,7 +52,7 @@ Uploading your docs
 -------------------
 
 There's a single URL endpoint, ``/hmfd`` (easy to remember: "host my fucking docs").
-You give it a JSON document containing some simple metadata::
+Just POST a JSON document containing some simple metadata::
 
     {
       "name": "Host the Docs",
@@ -71,16 +71,30 @@ either as a new project, or a new version.
 See ``host_my_docs.py`` for an example script that uses the ``requests`` library
 to make a successful ``/hmfd`` POST.
 
-Administration
---------------
+Deleting your docs
+------------------
 
-The only "administration" would be to remove projects or versions.
-Just SSH or RDP and delete the folders.
-A web-based interface can be added in the future,
-if it turns out people really need to regularly remove projects/versions
-and a web-based interface would be helpful.
-We can also optionally do it through a URL:
-someone can just POST to an endpoint with project name and version and delete it.
+You can DELETE to the ``/hmfd`` endpoint to delete a version or entire project.
+Use the URL to delete the project name and version and it will be delete if it exists.
+For example, the following command will delete version 1.2 of MyProject's docs::
+
+    curl -X DELETE "http://127.0.0.1:5000/hmfd?name=MyProject&version=1.2"
+
+If the last version is deleted, the project will still remain
+(this is by design, is it a good one?).
+You need to include include a ``"entire_project"`` key to remove the entire project,
+including all versions, removing the display of the project entirely
+(note you do not need to include the version).::
+
+    curl -X DELETE "http://127.0.0.1:5000/hmfd?name=MyProject&entire_project=True"
+
+Alternatively, you can just ssh or RDP into the host and delete the directories yourself.
+
+Obviously there's no security here.
+On the other hand, it isn't exposed through any UI,
+so it's not like some random person is going to stumble across it
+or accidentally press a button.
+And you can always regenerate the docs easily if something happened.
 
 FAQ
 ===
