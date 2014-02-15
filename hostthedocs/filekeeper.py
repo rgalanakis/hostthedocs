@@ -4,6 +4,19 @@ import zipfile
 DEFAULT_PROJECT_DESCRIPTION = '<No project description>'
 
 
+def _tryint(s):
+    try:
+        return int(s)
+    except ValueError:
+        return s
+
+
+def sort_by_version(d):
+    v = d['version']
+    intparts = map(_tryint, v.split('.'))
+    return intparts
+
+
 def _get_proj_dict(docfiles_dir, proj_dir, link_root):
     join = lambda *a: os.path.join(docfiles_dir, proj_dir, *a)
     allpaths = os.listdir(join())
@@ -11,6 +24,7 @@ def _get_proj_dict(docfiles_dir, proj_dir, link_root):
         dict(version=p, link='%s/%s/%s/index.html' % (link_root, proj_dir, p))
         for p in allpaths if os.path.isdir(join(p))
     ]
+    versions.sort(key=sort_by_version)
     descr = DEFAULT_PROJECT_DESCRIPTION
     if 'description.txt' in allpaths:
         dpath = join('description.txt')

@@ -1,4 +1,5 @@
 import os
+import random
 import shutil
 import tempfile
 import unittest
@@ -64,3 +65,15 @@ class TestUnpackProject(unittest.TestCase):
         assert_exists('proj/1.1')
         assert_exists('proj/1.1/index.html', os.path.isfile)
         assert_exists('proj/description.txt', os.path.isfile)
+
+
+class SortByVersionTests(unittest.TestCase):
+
+    def test_sorts(self):
+        vers = ['0.9', '1.0', '1.0.0', '1.0.1', '1.1', '1.1.0', '1.1.1', '7.8.9']
+        vers = [dict(version=v) for v in vers]
+        randvers = list(vers)
+        random.shuffle(randvers)
+        self.assertNotEqual(vers, randvers)
+        randvers.sort(key=fk.sort_by_version)
+        self.assertEqual(vers, randvers)
