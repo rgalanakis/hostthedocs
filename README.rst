@@ -94,9 +94,12 @@ Is Host the Docs fast?
   You're probably lucky if you have more than a couple concurrent users reading your docs, anyway.
 
 Is there cross-project search?
-  No. This just hosts static HTML right now. Cross-project search
-  is the one advanced feature I think is a no-brainer,
-  and maybe one day Host the Docs will have it.
+  No. This just hosts static HTML right now.
+  The search *within* a project should work,
+  but you cannot search across projects.
+  I'd love to add it, but as I've never done something like this before,
+  it'd probably be more work than I can commit to.
+  If you're interested in adding this feature, please email me!
 
 What programming languages does Host the Docs support?
   Any. Host the Docs just hosts the static HTML files generated from the
