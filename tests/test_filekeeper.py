@@ -26,6 +26,11 @@ class TestParseDocfiles(unittest.TestCase):
         }
         self.assertEqual(result, ideal)
 
+    def test_not_existing_dir(self):
+        self.assertEqual(fk.parse_docfiles('balh blah blah'), {})
+
+
+class TestUnpackProject(unittest.TestCase):
     def test_unpacks(self):
         tempd = tempfile.mkdtemp('hostthedocs_tests')
         self.addCleanup(shutil.rmtree, tempd)

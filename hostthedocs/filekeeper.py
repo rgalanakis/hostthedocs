@@ -17,6 +17,9 @@ def _get_proj_dict(root, proj):
 
 
 def parse_docfiles(docfiles_dir):
+    if not os.path.exists(docfiles_dir):
+        return {}
+
     result = dict(
         (f, _get_proj_dict(docfiles_dir, f))
         for f in os.listdir(docfiles_dir))
