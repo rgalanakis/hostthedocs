@@ -7,18 +7,16 @@ app = Flask(__name__)
 
 @app.route('/hmfd', methods=['POST', 'DELETE'])
 def hmfd():
-    success = False
     if request.method == 'POST':
         unpack_project(request.files.values()[0].stream, request.form, getconfig.docfiles_dir)
-        success = True
     else:
         assert request.method == 'DELETE'
         delete_files(
-            request.form['name'],
-            request.form['version'],
+            request.args['name'],
+            request.args.get('version'),
             getconfig.docfiles_dir,
-            request.form.get('entire_project'))
-    return jsonify({'success': success})
+            request.args.get('entire_project'))
+    return jsonify({'success': True})
 
 
 @app.route('/')

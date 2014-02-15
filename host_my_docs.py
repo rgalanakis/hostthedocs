@@ -34,14 +34,12 @@ def _post(address, metadata, opts):
 
 
 def _delete(address, metadata, opts):
+    address += '?name=%s&version=%s' % (
+        metadata['name'], metadata['version'])
     if opts.deleteall:
-        metadata['entire_project'] = True
+        address += '&entire_project=True'
     print 'DELETING to', address
-    print '  metadata:', metadata
-    got = requests.delete(
-        address,
-        data=metadata
-    )
+    got = requests.delete(address)
     return got
 
 
