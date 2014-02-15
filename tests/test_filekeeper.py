@@ -1,3 +1,4 @@
+import mock
 import os
 import random
 import shutil
@@ -66,6 +67,23 @@ class TestUnpackProject(unittest.TestCase):
         assert_exists('proj/1.1/index.html', os.path.isfile)
         assert_exists('proj/description.txt', os.path.isfile)
 
+
+@mock.patch('shutil.rmtree')
+class DeleteFilesTests(unittest.TestCase):
+
+    def test_noop_if_not_exist(self, rmtree):
+        fk.delete_files('foo', '1.1.1', 'blah')
+        self.assertFalse(rmtree.call_count)
+
+    def test_rm_version(self, rmtree):
+        fk.delete_files('Project2', '2.0.3', DOCFILESDIR)
+        realpath = os.path.join(DOCFILESDIR, 'Project2', '2.0.3')
+        rmtree.assert_called_once_with(realpath)
+
+    def test_rm_all(self, rmtree):
+        fk.delete_files('Project2', None, DOCFILESDIR, True)
+        realpath = os.path.join(DOCFILESDIR, 'Project2')
+        rmtree.assert_called_once_with(realpath)
 
 class SortByVersionTests(unittest.TestCase):
 
