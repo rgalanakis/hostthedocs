@@ -44,9 +44,9 @@ Generating your docs
 --------------------
 
 Figure it out yourself!
-Host the Docs uses Sphinx to generate its html documentation,
-then zips up the ``build/html`` folder and sends it to a Host the Docs server.
-See ``create_the_docs.py``.
+For example, you can use Sphinx to generate html documentation (``make html``),
+then zip up the ``build/html`` folder and send it to a Host the Docs server
+via POSTing to ``/hmfd`` (see next section).
 
 Uploading your docs
 -------------------
@@ -64,6 +64,9 @@ And a ``.zip`` file that has an ``index.html`` file in the root.
 
 After you upload new docs, they should show up on the Host the Docs homepage,
 either as a new project, or a new version.
+
+See ``test_hmfd.py`` for an example script that uses the ``requests`` library
+to make a successful ``/hmfd`` POST.
 
 Administration
 --------------
