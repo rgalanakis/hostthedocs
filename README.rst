@@ -56,7 +56,7 @@ Uploading your docs
 To upload your docs, use the ``/hmfd`` URL (easy to remember: "host my fucking docs").
 You need to POST a JSON document and include a ``.zip`` file.
 
-The JSON data should contain the following:
+The JSON data should contain the following::
 
     {
       "name": "Host the Docs",
