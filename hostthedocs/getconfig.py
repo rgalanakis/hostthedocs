@@ -3,15 +3,15 @@
 import os
 
 try:
-    import htdconf
+    import conf
 except ImportError:
-    htdconf = None
+    conf = None
 
 
 def get(attr, default):
     result = os.getenv('HTD_' + attr.upper())
     if result is None:
-        result = getattr(htdconf, attr, None)
+        result = getattr(conf, attr, None)
     if result is None:
         result = default
     return result
