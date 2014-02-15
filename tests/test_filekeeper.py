@@ -26,11 +26,20 @@ class TestParseDocfiles(unittest.TestCase):
                 ]
             },
             {
-                'name': 'project2',
+                # Caps to test sorting
+                'name': 'Project2',
                 'description': fk.DEFAULT_PROJECT_DESCRIPTION,
                 'versions': [
                     {'version': '2.0.3',
-                     'link': 'static/project2/2.0.3/index.html'},
+                     'link': 'static/Project2/2.0.3/index.html'},
+                ]
+            },
+            {
+                'name': 'project3',
+                'description': fk.DEFAULT_PROJECT_DESCRIPTION,
+                'versions': [
+                    {'version': '3.3.3',
+                     'link': 'static/project3/3.3.3/index.html'},
                 ]
             }
         ]

@@ -24,7 +24,7 @@ def parse_docfiles(docfiles_dir, link_root):
         return {}
 
     result = [_get_proj_dict(docfiles_dir, f, link_root)
-              for f in os.listdir(docfiles_dir)]
+              for f in sorted(os.listdir(docfiles_dir), key=str.lower)]
 
     return result
 
