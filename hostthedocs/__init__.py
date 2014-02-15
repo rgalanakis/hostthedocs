@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, render_template, request
-import json
 
 from .filekeeper import parse_docfiles, unpack_project
 from . import getconfig
