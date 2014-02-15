@@ -40,6 +40,29 @@ To add your docs, see
 
 server = get('server', '127.0.0.1')
 port = get('port', 5000)
-debug = get('debug', None)
+debug = bool(get('debug', None))
 
 all = dict((k, v) for (k, v) in globals().items() if isinstance(v, basestring))
+
+
+def serve_gevent(app):
+    from gevent.wsgi import WSGIServer
+
+    http_server = WSGIServer((server, port), app)
+    http_server.serve_forever()
+
+
+def serve_flask(app):
+    app.run(server, port, debug)
+
+
+apprunner = get('apprunner', None)
+
+serve = None
+if apprunner:
+    serve = {'gevent': serve_gevent,
+             'flask': serve_flask}[apprunner]
+if serve is None:
+    serve = get('serve', None)
+if serve is None:
+    serve = serve_flask
