@@ -57,3 +57,25 @@ def unpack_project(zippath, proj_metadata, docfiles_dir):
     zf = zipfile.ZipFile(zippath)
     # This is insecure, we are only accepting things from trusted sources.
     zf.extractall(verdir)
+
+
+def valid_name(s):
+    """See readme for what's valid.
+
+    :type s: str
+    """
+    for c in s:
+        if not (c.isalnum() or c in ' -_'):
+            return False
+    return True
+
+
+def valid_version(s):
+    """See readme for what's valid.
+
+    :type s: str
+    """
+    for c in s:
+        if not (c.isalnum() or c == '.'):
+            return False
+    return True

@@ -60,7 +60,10 @@ You give it a JSON document containing some simple metadata::
       "description": "Host the Docs makes hosting any HTML documentation simple."
     }
     
-And a ``.zip`` file that has an ``index.html`` file in the root.
+and a ``.zip`` file that has an ``index.html`` file in the root.
+The ``'name'`` key must contain only letters, numbers, spaces, underscores, and dashes.
+The ``version`` must contain only letters, numbers, and periods.
+The ``description`` can be any string, and can contain HTML.
 
 After you upload new docs, they should show up on the Host the Docs homepage,
 either as a new project, or a new version.

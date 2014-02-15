@@ -77,3 +77,26 @@ class SortByVersionTests(unittest.TestCase):
         self.assertNotEqual(vers, randvers)
         randvers.sort(key=fk.sort_by_version)
         self.assertEqual(vers, randvers)
+
+
+class ValidationTests(unittest.TestCase):
+
+    def test_name(self):
+        valid = lambda s: self.assertTrue(fk.valid_name(s))
+        valid('hello there')
+        valid('1 hello - _ there')
+        invalid = lambda s: self.assertFalse(fk.valid_name(s))
+        invalid('hel |')
+        invalid('% hi')
+        invalid('; hi')
+        invalid('/foo')
+
+    def test_version(self):
+        valid = lambda s: self.assertTrue(fk.valid_version(s))
+        valid('1.2.3')
+        valid('4.rc.1')
+        invalid = lambda s: self.assertFalse(fk.valid_version(s))
+        invalid(' 1.2')
+        invalid('1.2 ')
+        invalid('1.2-')
+        invalid('1.2_')

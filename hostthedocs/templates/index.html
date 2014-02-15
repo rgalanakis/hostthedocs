@@ -20,7 +20,7 @@
                     <!--<img src="http://placehold.it/800x500" alt="">-->
                     <div class="caption hero-item">
                         <h3>{{ project.name }}</h3>
-                        <p>{{ project.description }}</p>
+                        <p>{{ project.description|safe }}</p>
                         {% for version in project.versions %}
                             <p><a href="{{ version.link }}">Version {{ version.version }}</a></p>
                         {% endfor %}
