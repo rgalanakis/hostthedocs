@@ -74,10 +74,13 @@ to make a successful ``/hmfd`` POST.
 Administration
 --------------
 
-The only administration is to remove projects or versions.
+The only "administration" would be to remove projects or versions.
 Just SSH or RDP and delete the folders.
 A web-based interface can be added in the future,
-but that would probably require some security model so whatever!
+if it turns out people really need to regularly remove projects/versions
+and a web-based interface would be helpful.
+We can also optionally do it through a URL:
+someone can just POST to an endpoint with project name and version and delete it.
 
 FAQ
 ===
@@ -85,15 +88,23 @@ FAQ
 I'm sure you have a lot of questions. Maybe I have answers?
 
 Who is Host the Docs for?
-  The programmer in an enterprise environment, maybe using Windows,
-  maybe without time or machines to spare, maybe who doesn't even do web programming,
+  The programmer in an enterprise environment,
+  maybe using Windows,
+  maybe without time or machines to spare,
+  maybe who doesn't even do web programming,
   who has documentation to host and no good way to host it.
+  If you really hate Host the Docs,
+  and find its ideas and implementation offensive,
+  it's probably not for you.
 
 Is Host the Docs secure?
-  Fuck no! Run it behind a firewall and only give access to people you trust.
+  No. Run it behind a firewall and only give access to people you don't mistrust
+  (ie, only people within your organization, not the general public).
+  It does some basic validation of things like project names and versions,
+  but there are all sorts of holes.
 
 Is Host the Docs fast?
-  Fuck no! It is probably fast enough, though.
+  No. It is probably fast enough, though.
   You're probably lucky if you have more than a couple concurrent users reading your docs, anyway.
 
 Is there cross-project search?
@@ -108,9 +119,29 @@ What programming languages does Host the Docs support?
   Any. Host the Docs just hosts the static HTML files generated from the
   programming language documentation generator of your choice.
 
-This project is stupid, just use *x*!
-  I wish it were so. I could not find any hosted or self-hosted solution to host documentation from private servers, such as internal source control repositories or private Github repos. My needs were so simple and the existing answers so complex, Host the Docs was born.
+This project is stupid, just use **x**!
+  I wish it were so. I could not find any hosted or self-hosted solution to
+  host documentation from private servers,
+  such as internal source control repositories or private Github repos.
+  My needs were so simple and the existing answers so complex,
+  Host the Docs was born.
 
 Is there a database?
   No. In the future a DB can be added if we need to cache the project information.
   I doubt we'll ever have any notion of 'users' though.
+
+Is Host the Docs' theme customizable?
+  No, at least not right now. I'd like to get some more users first.
+  The "site" is a single page, so I'm not sure it's worth it.
+  The two options are to configure where Flask serves its static files from
+  (so you would provide a whole new template),
+  or make the current colors configurable,
+  maybe through some inline stylesheets that are templated through config values.
+  Not sure. Open to ideas.
+
+Does Host the Docs support images?
+  No, at least right now. I want to avoid complicating things at first.
+  I'd like to add project images, maybe,
+  and of course a logo/favicon for Host the Docs itself.
+  You can embed an ``<img>`` tag in your project description HTML,
+  if you really want.
