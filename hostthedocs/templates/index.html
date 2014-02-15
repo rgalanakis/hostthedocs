@@ -15,10 +15,10 @@
         <div class="row text-center">
 
             {% for project in projects %}
-            <div class="col-lg-3 col-md-6 hero-feature">
+            <div class="col-lg-3 col-md-6 htd-group">
                 <div class="thumbnail">
                     <!--<img src="http://placehold.it/800x500" alt="">-->
-                    <div class="caption hero-item">
+                    <div class="caption htd-item">
                         <h3>{{ project.name }}</h3>
                         <p>{{ project.description|safe }}</p>
                         {% for version in project.versions %}
