@@ -65,7 +65,7 @@ And a ``.zip`` file that has an ``index.html`` file in the root.
 After you upload new docs, they should show up on the Host the Docs homepage,
 either as a new project, or a new version.
 
-See ``test_hmfd.py`` for an example script that uses the ``requests`` library
+See ``host_my_docs.py`` for an example script that uses the ``requests`` library
 to make a successful ``/hmfd`` POST.
 
 Administration
