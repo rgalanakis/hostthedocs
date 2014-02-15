@@ -18,6 +18,11 @@ Host the Docs is built with Flask, so it should be easy enough to set up and run
     
 Under the hood, the server uses a SQLlite DB to cache information, like what docs are available. There's no DB server to run or configure. Host the Docs just uses files for pretty much everything.
 
+Generating your docs
+--------------------
+
+Figure it out yourself! Host the Docs uses Sphinx to generate its html documentation, then zips up the ``build/html`` folder and sends it to a Host the Docs server. See ``create_the_docs.py``.
+
 Uploading your docs
 -------------------
 
