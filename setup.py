@@ -6,5 +6,4 @@ setup(name='hostthedocs',
       author='Rob Galanakis',
       author_email='rob.galanakis@gmail.com',
       url='https://github.com/rgalanakis/hostthedocs',
-      packages=['hostthedocs'],
      )
