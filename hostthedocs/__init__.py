@@ -1,13 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
+import json
 
 from .filekeeper import parse_docfiles, unpack_project
 from . import getconfig
 
 app = Flask(__name__)
 
-@app.route('/hmfd')
+@app.route('/hmfd', methods=['POST'])
 def hmfd():
-    pass
+    unpack_project(request.files.values()[0].stream, request.form, getconfig.docfiles_dir)
+    return jsonify({'success': True})
 
 
 @app.route('/')
