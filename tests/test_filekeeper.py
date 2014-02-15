@@ -13,21 +13,31 @@ ZIPFILE = os.path.join(THISDIR, 'project.zip')
 
 class TestParseDocfiles(unittest.TestCase):
     def test_parses(self):
-        result = fk.parse_docfiles(DOCFILESDIR)
-        ideal = {
-            'project1': {
+        result = fk.parse_docfiles(DOCFILESDIR, 'static')
+        ideal = [
+            {
+                'name': 'project1',
                 'description': 'Project description.',
-                'versions': ['1.0.1', '1.2.0']
+                'versions': [
+                    {'version': '1.0.1',
+                     'link': 'static/project1/1.0.1/index.html'},
+                    {'version': '1.2.0',
+                     'link': 'static/project1/1.2.0/index.html'}
+                ]
             },
-            'project2': {
+            {
+                'name': 'project2',
                 'description': fk.DEFAULT_PROJECT_DESCRIPTION,
-                'versions': ['2.0.3']
+                'versions': [
+                    {'version': '2.0.3',
+                     'link': 'static/project2/2.0.3/index.html'},
+                ]
             }
-        }
+        ]
         self.assertEqual(result, ideal)
 
     def test_not_existing_dir(self):
-        self.assertEqual(fk.parse_docfiles('balh blah blah'), {})
+        self.assertEqual(fk.parse_docfiles('balh blah blah', 'static'), {})
 
 
 class TestUnpackProject(unittest.TestCase):

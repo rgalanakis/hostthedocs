@@ -4,25 +4,27 @@ import zipfile
 DEFAULT_PROJECT_DESCRIPTION = '<No project description>'
 
 
-def _get_proj_dict(root, proj):
-    join = lambda *a: os.path.join(root, proj, *a)
+def _get_proj_dict(docfiles_dir, proj_dir, link_root):
+    join = lambda *a: os.path.join(docfiles_dir, proj_dir, *a)
     allpaths = os.listdir(join())
-    dirs = [p for p in allpaths if os.path.isdir(join(p))]
+    versions = [
+        dict(version=p, link='%s/%s/%s/index.html' % (link_root, proj_dir, p))
+        for p in allpaths if os.path.isdir(join(p))
+    ]
     descr = DEFAULT_PROJECT_DESCRIPTION
     if 'description.txt' in allpaths:
         dpath = join('description.txt')
         with open(dpath) as f:
             descr = f.read().strip()
-    return {'versions': dirs, 'description': descr}
+    return {'name': proj_dir, 'versions': versions, 'description': descr}
 
 
-def parse_docfiles(docfiles_dir):
+def parse_docfiles(docfiles_dir, link_root):
     if not os.path.exists(docfiles_dir):
         return {}
 
-    result = dict(
-        (f, _get_proj_dict(docfiles_dir, f))
-        for f in os.listdir(docfiles_dir))
+    result = [_get_proj_dict(docfiles_dir, f, link_root)
+              for f in os.listdir(docfiles_dir)]
 
     return result
 
