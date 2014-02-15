@@ -14,5 +14,4 @@ def hmfd():
 @app.route('/')
 def home():
     projects = parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)
-    print projects
-    return render_template('index.html', projects=projects, **getconfig.all)
+    return render_template('index.html', projects=projects, **getconfig.renderables)

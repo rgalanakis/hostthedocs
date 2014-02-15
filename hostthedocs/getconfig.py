@@ -1,4 +1,6 @@
-"""Module for loading a user config."""
+"""Module for loading a user config.
+See conf.py for more info.
+"""
 
 import os
 
@@ -17,22 +19,16 @@ def get(attr, default):
     return result
 
 
-docfiles_dir = get('docfiles_dir', os.path.join(os.getcwd(), 'static', 'docfiles'))
+docfiles_dir = get('docfiles_dir', 'hostthedocs/static/docfiles')
 #assert os.path.isdir(docfiles_dir), 'Must exist: %s' % docfiles_dir
 docfiles_link_root = get('docfiles_link_root', 'static/docfiles')
 
-# If defined, is placed in the footer.
-# if not defined, don't display copyright.
-# Probably you want to use something
-# like 'Copyright &copy; My Company 2014'
 copyright = get('copyright', '')
 
-# Title of the homepage.
 title = get('title', 'Host the Docs Home')
 
-# Message in jumbotron.
 welcome = get('welcome', 'Welcome to Host the Docs!')
-# Message below jumbotron
+
 intro = get('intro', """
 Browse all available documentation below.
 To add your docs, see
@@ -42,7 +38,7 @@ server = get('server', '127.0.0.1')
 port = get('port', 5000)
 debug = bool(get('debug', None))
 
-all = dict((k, v) for (k, v) in globals().items() if isinstance(v, basestring))
+renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, basestring))
 
 
 def serve_gevent(app):
@@ -56,12 +52,12 @@ def serve_flask(app):
     app.run(server, port, debug)
 
 
-apprunner = get('apprunner', None)
+wsgi_server = get('wsgi_server', None)
 
 serve = None
-if apprunner:
+if wsgi_server:
     serve = {'gevent': serve_gevent,
-             'flask': serve_flask}[apprunner]
+             'flask': serve_flask}[wsgi_server]
 if serve is None:
     serve = get('serve', None)
 if serve is None:
