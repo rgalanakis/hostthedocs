@@ -17,9 +17,9 @@ Running the server
 ------------------
 
 Host the Docs is built with Flask,
-so it should be easy enough to set up and run,
+so it should be easy enough to set up and run
 even if you aren't a competent web programmer.
-You don't even have to run Host the Docs with Apache or whatever WSGI server of your choice,
+You don't even have to run Host the Docs with Apache or nginx or whatever,
 even though I recommend it since you're primarily serving static files.
 ::
 
@@ -33,17 +33,19 @@ Configuring the server
 ----------------------
 
 Configuration is supported through environment variables or a a ``conf.py`` file
-(env vars are preferred, ``conf.py`` after that, defaults after that).
+(env vars are looked at first, ``conf.py`` after that, defaults after that).
 The name of the environment variable is the same as the attribute in ``conf.py``
 except with ``HTD_`` prepended.
 
-See the ``conf.py.template`` file for a list and explanation of all the
+See the ``conf.py`` file for a list and explanation of all the
 configuration values Host the Docs supports.
+The included one sets no values so feel free to override what you want.
 
 Generating your docs
 --------------------
 
-Figure it out yourself!
+You are responsible for your own documentation generation.
+
 For example, you can use Sphinx to generate html documentation (``make html``),
 then zip up the ``build/html`` folder and send it to a Host the Docs server
 via POSTing to ``/hmfd`` (see next section).
@@ -51,8 +53,10 @@ via POSTing to ``/hmfd`` (see next section).
 Uploading your docs
 -------------------
 
-There's a single URL endpoint, ``/hmfd`` (easy to remember: "host my fucking docs").
-Just POST a JSON document containing some simple metadata::
+To upload your docs, use the ``/hmfd`` URL (easy to remember: "host my fucking docs").
+You need to POST a JSON document and include a ``.zip`` file.
+
+The JSON data should contain the following:
 
     {
       "name": "Host the Docs",
@@ -60,13 +64,17 @@ Just POST a JSON document containing some simple metadata::
       "description": "Host the Docs makes hosting any HTML documentation simple."
     }
     
-and a ``.zip`` file that has an ``index.html`` file in the root.
-The ``'name'`` key must contain only letters, numbers, spaces, underscores, and dashes.
-The ``version`` must contain only letters, numbers, and periods.
-The ``description`` can be any string, and can contain HTML.
+* The ``'name'`` key must contain only letters, numbers, spaces, underscores, and dashes.
+* The ``version`` must contain only letters, numbers, and periods.
+* The ``description`` can be any string, and can contain HTML.
 
-After you upload new docs, they should show up on the Host the Docs homepage,
-either as a new project, or a new version.
+The ``.zip`` should have an ``index.html`` file in the root.
+For example, ``mydocs.zip/index.html`` is well-formed.
+However, ``mydocs.zip/html/index.html`` is not.
+
+After you upload new docs,
+they should show up on the Host the Docs homepage,
+either as a new project or a new version.
 
 See ``host_my_docs.py`` for an example script that uses the ``requests`` library
 to make a successful ``/hmfd`` POST.
@@ -74,15 +82,16 @@ to make a successful ``/hmfd`` POST.
 Deleting your docs
 ------------------
 
-You can DELETE to the ``/hmfd`` endpoint to delete a version or entire project.
-Use the URL to delete the project name and version and it will be delete if it exists.
+You can DELETE to ``/hmfd`` to delete a version or entire project.
+The url parameters should include the project name and version,
+and it will be deleted if it exists (noop if it doesn't).
 For example, the following command will delete version 1.2 of MyProject's docs::
 
     curl -X DELETE "http://127.0.0.1:5000/hmfd?name=MyProject&version=1.2"
 
 If the last version is deleted, the project will still remain
 (this is by design, is it a good one?).
-You need to include include a ``"entire_project"`` key to remove the entire project,
+You need to include include a ``"entire_project"`` parameter to remove the entire project,
 including all versions, removing the display of the project entirely
 (note you do not need to include the version).::
 
@@ -99,7 +108,7 @@ And you can always regenerate the docs easily if something happened.
 FAQ
 ===
 
-I'm sure you have a lot of questions. Maybe I have answers?
+I'm sure you have a lot of questions.
 
 Who is Host the Docs for?
   The programmer in an enterprise environment,
@@ -114,12 +123,15 @@ Who is Host the Docs for?
 Is Host the Docs secure?
   No. Run it behind a firewall and only give access to people you don't mistrust
   (ie, only people within your organization, not the general public).
-  It does some basic validation of things like project names and versions,
+  It does some basic validation of things like project names and versions
+  to keep you from shooting yourself in the foot,
   but there are all sorts of holes.
 
 Is Host the Docs fast?
-  No. It is probably fast enough, though.
-  You're probably lucky if you have more than a couple concurrent users reading your docs, anyway.
+  It depends what you mean by "fast." It is probably fast enough.
+  You're lucky if you have more than a couple concurrent users reading your docs,
+  so using Flask or gevent to serve static content should not be an issue.
+  And if you need it faster, set it up with a proper webserver.
 
 Is there cross-project search?
   No. This just hosts static HTML right now.
@@ -137,15 +149,20 @@ This project is stupid, just use **x**!
   I wish it were so. I could not find any hosted or self-hosted solution to
   host documentation from private servers,
   such as internal source control repositories or private Github repos.
+  Workarounds were available, but honestly,
+  this is documentation and I didn't have the time for that.
   My needs were so simple and the existing answers so complex,
-  Host the Docs was born.
+  so Host the Docs was born while my son took a nap in the afternoon,
+  and my wife went out with her friends at night.
 
 Is there a database?
-  No. In the future a DB can be added if we need to cache the project information.
-  I doubt we'll ever have any notion of 'users' though.
+  No. In the future a DB can be added if there's a need to cache
+  the project information from disk.
+
 
 Is Host the Docs' theme customizable?
-  No, at least not right now. I'd like to get some more users first.
+  Not right now. I'd like to get some more users first
+  to know what sort of customization is desirable.
   The "site" is a single page, so I'm not sure it's worth it.
   The two options are to configure where Flask serves its static files from
   (so you would provide a whole new template),
@@ -154,8 +171,8 @@ Is Host the Docs' theme customizable?
   Not sure. Open to ideas.
 
 Does Host the Docs support images?
-  No, at least right now. I want to avoid complicating things at first.
-  I'd like to add project images, maybe,
+  Not right now. I want to avoid complicating things at first.
+  I'd like to add project logos on the home page,
   and of course a logo/favicon for Host the Docs itself.
   You can embed an ``<img>`` tag in your project description HTML,
   if you really want.
