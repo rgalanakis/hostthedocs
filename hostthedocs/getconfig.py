@@ -35,7 +35,7 @@ To add your docs, see
 <a href="https://github.com/rgalanakis/hostthedocs#uploading-your-docs">these instructions</a>.""")
 
 server = get('server', '127.0.0.1')
-port = get('port', 5000)
+port = int(get('port', 5000))
 debug = bool(get('debug', None))
 readonly = False
 
