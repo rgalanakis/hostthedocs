@@ -45,7 +45,7 @@ def _unlink(path):
     try:
         os.unlink(path)
     except WindowsError:
-        time.sleep(.5)
+        time.sleep(1)
         os.unlink(path)
 
 
