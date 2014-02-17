@@ -51,37 +51,46 @@ You are responsible for your own documentation generation.
 For example, you can use Sphinx to generate html documentation (``make html``),
 then zip up the ``build/html`` folder and send it to a Host the Docs server
 via POSTing to ``/hmfd`` (see next section).
+The ``.zip`` should have an ``index.html`` file in the root.
+For example, ``mydocs.zip/index.html`` is well-formed.
+However, ``mydocs.zip/html/index.html`` is not.
+
+
 Host the Docs just uses ``docutils`` to convert ``README.rst`` into and ``index.html`` file
 and then puts it into a zip file (see host_my_docs.py_ for example code).
+
+You can use the Linux ``zip`` command to zip a directory after building it through Sphinx
+(or you can build your own function based on the Python ``zipfile`` module.
 
 Uploading your docs
 -------------------
 
 To upload your docs, use the ``/hmfd`` URL (easy to remember: "host my fucking docs").
 You need to POST a JSON document and include a ``.zip`` file.
+For example, you would use the following to upload your docs
+using the Python ``requests`` library::
 
-The JSON data should contain the following::
+    zippath = 'mydocs.zip'
+    requests.post(
+        'http://hostthedocs.mycompany/hmfd',
+        data={
+            "name": "My Project",
+            "version": "0.1.0",
+            "description": "This is my project."
+        },
+        files={"archive": ("archive.zip", open(zippath, 'rb'))})
 
-    {
-      "name": "Host the Docs",
-      "version": "0.1.0",
-      "description": "Host the Docs makes hosting any HTML documentation simple."
-    }
-    
+* See `Generating your docs`_ for info about the zip file.
 * The ``'name'`` key must contain only letters, numbers, spaces, underscores, and dashes.
-* The ``version`` must contain only letters, numbers, and periods.
-* The ``description`` can be any string, and can contain HTML.
-
-The ``.zip`` should have an ``index.html`` file in the root.
-For example, ``mydocs.zip/index.html`` is well-formed.
-However, ``mydocs.zip/html/index.html`` is not.
+* The ``'version'`` must contain only letters, numbers, and periods.
+* The ``'description'`` can be any string, and can contain HTML.
 
 After you upload new docs,
 they should show up on the Host the Docs homepage,
 either as a new project or a new version.
+If the files already exist, they will be overwritten.
 
-See host_my_docs.py_ for an example script that uses the ``requests`` library
-to make a successful ``/hmfd`` POST.
+See host_my_docs.py_ for more example code.
 
 Deleting your docs
 ------------------
