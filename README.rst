@@ -13,8 +13,10 @@ from any source or language or SCM.
 
 Seriously, let other people generate their own docs, I just want to Host the Docs!
 
+.. contents::
+
 Running the server
-------------------
+==================
 
 Host the Docs is built with Flask,
 so it should be easy enough to set up and run
@@ -42,7 +44,7 @@ configuration values Host the Docs supports.
 Copy it to ``conf.py`` and override the values you want.
 
 Generating your docs
---------------------
+====================
 
 You are responsible for your own documentation generation.
 
