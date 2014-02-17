@@ -5,6 +5,8 @@ from . import getconfig
 
 app = Flask(__name__)
 
+app.config['MAX_CONTENT_LENGTH'] = getconfig.max_content_mb * 1024 * 1024
+
 @app.route('/hmfd', methods=['POST', 'DELETE'])
 def hmfd():
     if getconfig.readonly:

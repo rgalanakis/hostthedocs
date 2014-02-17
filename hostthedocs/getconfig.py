@@ -38,6 +38,7 @@ host = get('host', '127.0.0.1')
 port = int(get('port', 5000))
 debug = bool(get('debug', None))
 readonly = get('readonly', False)
+max_content_mb = float(get('max_content_mb', 8))
 
 renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, basestring))
 

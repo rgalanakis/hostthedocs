@@ -40,6 +40,10 @@ debug = None
 # If True, do not allow anything to be done via /hmfd
 readonly = False
 
+# Max upload size in MB (float or int)
+# Default to 8, may need to be much larger if you have big docs.
+max_content_mb = None
+
 # Name of the WSGI server to use.
 # Choose 'flask' or 'gevent'.
 # Default is to use 'flask' if debug == True,
