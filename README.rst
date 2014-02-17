@@ -62,7 +62,6 @@ The ``.zip`` should have an ``index.html`` file in the root.
 For example, ``mydocs.zip/index.html`` is well-formed.
 However, ``mydocs.zip/html/index.html`` is not.
 
-
 Host the Docs just uses ``docutils`` to convert ``README.rst`` into and ``index.html`` file
 and then puts it into a zip file (see host_my_docs.py_ for example code).
 
@@ -89,9 +88,20 @@ using the Python ``requests`` library::
         },
         files={"archive": ("archive.zip", open(zippath, 'rb'))})
 
+You can even do the entire zipping and uploading via the command line::
+
+    cd /path/to/html
+    zip -r archive.zip *
+    curl -X POST \
+      -F filedata=@archive.zip \
+      -F name="My Project" \
+      -F version="0.1.0" \
+      -F description="This is my project." \
+      http://hostthedocs.mycompany/hmfd
+
 * See `Generating your docs`_ for info about the zip file.
-* The ``'name'`` key must contain only letters, numbers, spaces, underscores, and dashes.
-* The ``'version'`` must contain only letters, numbers, and periods.
+* The ``name`` must contain only letters, numbers, spaces, underscores, and dashes.
+* The ``version`` must contain only letters, numbers, and periods.
 * The ``'description'`` can be any string, and can contain HTML.
 
 After you upload new docs,
