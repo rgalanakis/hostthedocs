@@ -37,7 +37,7 @@ To add your docs, see
 host = get('host', '127.0.0.1')
 port = int(get('port', 5000))
 debug = bool(get('debug', None))
-readonly = False
+readonly = get('readonly', False)
 
 renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, basestring))
 
