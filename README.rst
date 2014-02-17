@@ -43,8 +43,15 @@ See the conf_template.py_ file for a list and explanation of all the
 configuration values Host the Docs supports.
 Copy it to ``conf.py`` and override the values you want.
 
+Working with Host the Docs
+==========================
+
+Using Host the Docs involves `Generating your docs`_
+and `Uploading your docs`_.
+You may also need to know about `Deleting your docs`_.
+
 Generating your docs
-====================
+--------------------
 
 You are responsible for your own documentation generation.
 
@@ -61,6 +68,8 @@ and then puts it into a zip file (see host_my_docs.py_ for example code).
 
 You can use the Linux ``zip`` command to zip a directory after building it through Sphinx
 (or you can build your own function based on the Python ``zipfile`` module.
+
+.. _uploaddocs-label:
 
 Uploading your docs
 -------------------
