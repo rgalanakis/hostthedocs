@@ -41,8 +41,11 @@ debug = None
 readonly = False
 
 # Name of the WSGI server to use.
-# Choose from 'flask' or 'gevent',
-# or use your own webserver by defining a serve funciton (see below).
+# Choose 'flask' or 'gevent'.
+# Default is to use 'flask' if debug == True,
+#   otherwise 'gevent' if the module is importable,
+#   otherwise 'flask'.
+# Or use your own webserver by defining a serve funciton (see below).
 wsgi_server = None
 
 # If you want to use your own WSGI server,

@@ -48,18 +48,31 @@ def serve_gevent(app):
     http_server = WSGIServer((server, port), app)
     http_server.serve_forever()
 
-
 def serve_flask(app):
     app.run(server, port, debug)
 
+def calc_serve(serve_from_conf, gevent_module, debug_from_conf, wsgi_server_from_conf):
+    if serve_from_conf is not None:
+        return serve_from_conf
 
-wsgi_server = get('wsgi_server', None)
+    if debug_from_conf:
+        default_wsgi = 'flask'
+    elif gevent_module is not None:
+        default_wsgi = 'gevent'
+    else:
+        default_wsgi = 'flask'
 
-serve = None
-if wsgi_server:
-    serve = {'gevent': serve_gevent,
-             'flask': serve_flask}[wsgi_server]
-if serve is None:
-    serve = get('serve', None)
-if serve is None:
-    serve = serve_flask
+    wsgi_server = wsgi_server_from_conf or default_wsgi
+    servefunc = {
+        'gevent': serve_gevent,
+        'flask': serve_flask}[wsgi_server]
+    return servefunc
+
+def _calc_serve():
+    try:
+        import gevent
+    except ImportError:
+        gevent = None
+    return calc_serve(get('serve', None), gevent, debug, get('wsgi_server', None))
+
+serve = _calc_serve()
