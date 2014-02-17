@@ -15,6 +15,10 @@ class HostTheDocsTests(unittest.TestCase):
             for meth in [self.app.post, self.app.delete]:
                 self.assertEqual(meth('/hmfd').status_code, 403)
 
+    def test_missing_zip(self):
+        resp = self.app.post('/hmfd')
+        self.assertEqual(400, resp.status_code)
+
 
 class ConfigTests(unittest.TestCase):
 

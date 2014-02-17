@@ -11,8 +11,14 @@ app.config['MAX_CONTENT_LENGTH'] = getconfig.max_content_mb * 1024 * 1024
 def hmfd():
     if getconfig.readonly:
         return abort(403)
+
     if request.method == 'POST':
-        unpack_project(request.files.values()[0].stream, request.form, getconfig.docfiles_dir)
+        if not request.files:
+            return abort(400, 'Request is missing a zip file.')
+        unpack_project(
+            request.files.values()[0].stream,
+            request.form,
+            getconfig.docfiles_dir)
     else:
         assert request.method == 'DELETE'
         delete_files(
