@@ -49,6 +49,8 @@ You are responsible for your own documentation generation.
 For example, you can use Sphinx to generate html documentation (``make html``),
 then zip up the ``build/html`` folder and send it to a Host the Docs server
 via POSTing to ``/hmfd`` (see next section).
+Host the Docs just uses ``docutils`` to convert ``README.rst`` into and ``index.html`` file
+and then puts it into a zip file (see host_my_docs.py_ for example code).
 
 Uploading your docs
 -------------------
@@ -109,6 +111,11 @@ FAQ
 ===
 
 I'm sure you have a lot of questions.
+
+Is there a demo available?
+  Yes! Go to http://tech-artists.org:5003/
+  It is a readonly installation, so you can view Host the Doc's measily single RST file,
+  but you can't post or delete your own projects.
 
 Who is Host the Docs for?
   The programmer in an enterprise environment,
