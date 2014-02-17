@@ -1,5 +1,5 @@
 """Module for loading a user config.
-See conf.py for more info.
+See conf_template.py for more info.
 """
 
 import os

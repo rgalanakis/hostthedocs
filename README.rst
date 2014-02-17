@@ -37,9 +37,9 @@ Configuration is supported through environment variables or a a ``conf.py`` file
 The name of the environment variable is the same as the attribute in ``conf.py``
 except with ``HTD_`` prepended.
 
-See the ``conf.py`` file for a list and explanation of all the
+See the ``conf_template.py`` file for a list and explanation of all the
 configuration values Host the Docs supports.
-The included one sets no values so feel free to override what you want.
+Copy it to ``conf.py`` and override the values you want.
 
 Generating your docs
 --------------------
