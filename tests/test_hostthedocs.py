@@ -4,7 +4,7 @@ import unittest
 import hostthedocs
 
 
-class FlaskrTestCase(unittest.TestCase):
+class HostTheDocsTests(unittest.TestCase):
 
     def setUp(self):
         hostthedocs.app.config['TESTING'] = True
