@@ -88,9 +88,10 @@ def generate_htd_docs():
         'description': 'Makes documentation hosting easy.'}
     host = 'tech-artists.org:5003'
 
-    resp = post(host, metadata, zippath)
-
-    _unlink(zippath)
+    try:
+        resp = post(host, metadata, zippath)
+    finally:
+        _unlink(zippath)
 
     if resp.status_code != 200:
         raise RuntimeError(repr(resp))
