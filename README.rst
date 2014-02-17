@@ -37,7 +37,7 @@ Configuration is supported through environment variables or a a ``conf.py`` file
 The name of the environment variable is the same as the attribute in ``conf.py``
 except with ``HTD_`` prepended.
 
-See the ``conf_template.py_`` file for a list and explanation of all the
+See the conf_template.py_ file for a list and explanation of all the
 configuration values Host the Docs supports.
 Copy it to ``conf.py`` and override the values you want.
 
@@ -76,7 +76,7 @@ After you upload new docs,
 they should show up on the Host the Docs homepage,
 either as a new project or a new version.
 
-See ``host_my_docs.py_`` for an example script that uses the ``requests`` library
+See host_my_docs.py_ for an example script that uses the ``requests`` library
 to make a successful ``/hmfd`` POST.
 
 Deleting your docs
