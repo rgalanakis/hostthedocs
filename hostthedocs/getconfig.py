@@ -34,7 +34,7 @@ Browse all available documentation below.
 To add your docs, see
 <a href="https://github.com/rgalanakis/hostthedocs#uploading-your-docs">these instructions</a>.""")
 
-server = get('server', '127.0.0.1')
+host = get('host', '127.0.0.1')
 port = int(get('port', 5000))
 debug = bool(get('debug', None))
 readonly = False
@@ -45,11 +45,11 @@ renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, bases
 def serve_gevent(app):
     from gevent.wsgi import WSGIServer
 
-    http_server = WSGIServer((server, port), app)
+    http_server = WSGIServer((host, port), app)
     http_server.serve_forever()
 
 def serve_flask(app):
-    app.run(server, port, debug)
+    app.run(host, port, debug)
 
 def calc_serve(serve_from_conf, gevent_module, debug_from_conf, wsgi_server_from_conf):
     if serve_from_conf is not None:

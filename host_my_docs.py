@@ -45,7 +45,7 @@ def _delete(address, metadata, opts):
 
 def main():
     opts = parse()
-    address = 'http://%s:%s/hmfd' % (cfg.server, cfg.port)
+    address = 'http://%s:%s/hmfd' % (cfg.host, cfg.port)
     metadata = {
         'name': opts.name,
         'version': opts.version,

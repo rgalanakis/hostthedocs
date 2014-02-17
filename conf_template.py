@@ -30,8 +30,8 @@ welcome = None
 # Supports HTML.
 intro = None
 
-# Server to serve.
-server = None
+# Host to serve.
+host = None
 # Port to serve.
 port = None
 # Whether to serve in debug mode. Only used by Flask.
