@@ -126,6 +126,10 @@ Is Host the Docs secure?
   It does some basic validation of things like project names and versions
   to keep you from shooting yourself in the foot,
   but there are all sorts of holes.
+  If you need to make something publicly accessible,
+  use the ``readonly`` configuration option.
+  You will be able to manually add documentation through the filesystem,
+  but not through Host the Docs.
 
 Is Host the Docs fast?
   It depends what you mean by "fast." It is probably fast enough.

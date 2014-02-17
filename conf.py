@@ -37,6 +37,9 @@ port = None
 # Whether to serve in debug mode. Only used by Flask.
 debug = None
 
+# If True, do not allow anything to be done via /hmfd
+readonly = False
+
 # Name of the WSGI server to use.
 # Choose from 'flask' or 'gevent',
 # or use your own webserver by defining a serve funciton (see below).
