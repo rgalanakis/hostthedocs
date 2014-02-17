@@ -32,7 +32,7 @@ welcome = get('welcome', 'Welcome to Host the Docs!')
 intro = get('intro', """
 Browse all available documentation below.
 To add your docs, see
-<a href="https://github.com/rgalanakis/hostthedocs#uploading-your-docs">these instructions</a>.""")
+<a href="https://github.com/rgalanakis/hostthedocs#working-with-host-the-docs">these instructions</a>.""")
 
 host = get('host', '127.0.0.1')
 port = int(get('port', 5000))
