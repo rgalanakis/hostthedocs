@@ -22,7 +22,13 @@
                         <h3>{{ project.name }}</h3>
                         <p>{{ project.description|safe }}</p>
                         {% for version in project.versions %}
-                            <p><a href="{{ version.link }}">Version {{ version.version }}</a></p>
+                            <p><a href="{{ version.link }}">
+                                {% if version.version == 'latest' %}
+                                    Latest
+                                {% else %}
+                                    Version {{ version.version }}
+                                {% endif %}
+                            </a></p>
                         {% endfor %}
                         <!--<p><a href="#" class="btn btn-primary">Buy Now!</a>  <a href="#" class="btn btn-default">More Info</a>-->
                         <!--</p>-->

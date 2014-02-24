@@ -51,6 +51,22 @@ class TestParseDocfiles(unittest.TestCase):
         self.assertEqual(fk.parse_docfiles('balh blah blah', 'static'), {})
 
 
+class TestInsertLatest(unittest.TestCase):
+    def test_inserts(self):
+        result = fk.parse_docfiles(DOCFILESDIR, 'static')
+        fk.insert_link_to_latest(result, '%(project)s/blah')
+        for projinfo in result:
+            gotlink = projinfo['versions'][-1]['link']
+            ideallink = '%s/blah' % projinfo['name']
+            self.assertEqual(gotlink, ideallink)
+
+    def test_does_not_overwrite_existing_latest(self):
+        projs = [{'name': 'Project', 'versions': [{'version': 'latest', 'link': 'SPAM'}]}]
+        fk.insert_link_to_latest(projs, 'EGGS/%(project)s')
+        self.assertEqual(len(projs[0]['versions']), 1)
+        self.assertEqual(projs[0]['versions'][-1]['link'], 'SPAM')
+
+
 class TestUnpackProject(unittest.TestCase):
     def test_unpacks(self):
         tempd = tempfile.mkdtemp('hostthedocs_tests')

@@ -88,3 +88,24 @@ def delete_files(name, version, docfiles_dir, entire_project=False):
         remove = os.path.join(remove, version)
     if os.path.exists(remove):
         shutil.rmtree(remove)
+
+
+def _has_latest(versions):
+    return any(v['version'] == 'latest' for v in versions)
+
+
+def insert_link_to_latest(projects, template):
+    """For each project in ``projects``,
+    will append a "latest" version that links to a certain location
+    (should not be to static files).
+    Will not add a "latest" version if it already exists.
+
+    :param projects: Project dicts to mutate.
+    :param template: String to turn into a link.
+      Should have a ``%(project)s`` that will be replaced with the project name.
+    """
+    for p in projects:
+        if _has_latest(p['versions']):
+            continue
+        link = template % dict(project=p['name'])
+        p['versions'].append(dict(version='latest', link=link))

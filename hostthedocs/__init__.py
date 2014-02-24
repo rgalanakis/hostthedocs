@@ -1,6 +1,6 @@
-from flask import abort, Flask, jsonify, render_template, request
+from flask import abort, Flask, jsonify, redirect, render_template, request, url_for
 
-from .filekeeper import delete_files, parse_docfiles, unpack_project
+from .filekeeper import delete_files, insert_link_to_latest, parse_docfiles, unpack_project
 from . import getconfig
 
 app = Flask(__name__)
@@ -32,4 +32,14 @@ def hmfd():
 @app.route('/')
 def home():
     projects = parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)
+    insert_link_to_latest(projects, '%(project)s/latest')
     return render_template('index.html', projects=projects, **getconfig.renderables)
+
+
+@app.route('/<project>/latest')
+def latest(project):
+    projForName = {p['name']: p for p in parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)}
+    if project not in projForName:
+        return 'Project %s not found' % project, 404
+    latestlink = projForName[project]['versions'][-1]['link']
+    return redirect(latestlink)
