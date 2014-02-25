@@ -1,14 +1,18 @@
 import mock
 import unittest
+import urlparse
 
 import hostthedocs
+from tests import DOCFILESDIR
 
 
-class HostTheDocsTests(unittest.TestCase):
-
+class Base(unittest.TestCase):
     def setUp(self):
         hostthedocs.app.config['TESTING'] = True
         self.app = hostthedocs.app.test_client()
+
+
+class HMFDTests(Base):
 
     def test_readonly(self):
         with mock.patch('hostthedocs.getconfig.readonly', True):
@@ -18,6 +22,26 @@ class HostTheDocsTests(unittest.TestCase):
     def test_missing_zip(self):
         resp = self.app.post('/hmfd')
         self.assertEqual(400, resp.status_code)
+
+
+@mock.patch('hostthedocs.getconfig.docfiles_dir', DOCFILESDIR)
+@mock.patch('hostthedocs.getconfig.docfiles_link_root', 'linkroot')
+class LatestTests(Base):
+
+    def assert_redirect(self, path, code, location):
+        resp = self.app.get(path)
+        self.assertEqual(resp.status_code, code)
+        gotloc = urlparse.urlsplit(dict(resp.headers)['Location']).path
+        self.assertEqual(gotloc, location)
+
+    def test_latest_noslash(self):
+        self.assert_redirect('/foo/latest', 301, '/foo/latest/')
+
+    def test_latest_root(self):
+            self.assert_redirect('/Project2/latest/', 302, '/linkroot/Project2/2.0.3/index.html')
+
+    def test_latest_certainfile(self):
+            self.assert_redirect('/Project2/latest/somefile.html', 302, '/linkroot/Project2/2.0.3/somefile.html')
 
 
 class ConfigTests(unittest.TestCase):

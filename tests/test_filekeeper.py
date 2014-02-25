@@ -6,10 +6,8 @@ import tempfile
 import unittest
 
 from hostthedocs import filekeeper as fk
+from tests import DOCFILESDIR, THISDIR
 
-
-THISDIR = os.path.dirname(__file__)
-DOCFILESDIR = os.path.join(THISDIR, 'docfiles')
 ZIPFILE = os.path.join(THISDIR, 'project.zip')
 
 

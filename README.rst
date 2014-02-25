@@ -43,6 +43,22 @@ See the conf_template.py_ file for a list and explanation of all the
 configuration values Host the Docs supports.
 Copy it to ``conf.py`` and override the values you want.
 
+Linking to latest
+-----------------
+
+Instead of linking to a concrete path
+(for example, when referring to your documentation in a readme),
+you can refer to the 'latest' documentation. For example::
+
+    http://hostthedocs/myproject/latest/
+
+When someone goes to that link, they will be redirected to the "newest" documentation.
+You can also link to specific pages with "latest", like::
+
+    http://hostthedocs/myproject/latest/some.other.file.html
+
+The index page will also have a link to "Latest" for every project.
+
 Working with Host the Docs
 ==========================
 

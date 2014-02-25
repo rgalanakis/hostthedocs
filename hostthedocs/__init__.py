@@ -1,4 +1,6 @@
-from flask import abort, Flask, jsonify, redirect, render_template, request, url_for
+import os
+
+from flask import abort, Flask, jsonify, redirect, render_template, request
 
 from .filekeeper import delete_files, insert_link_to_latest, parse_docfiles, unpack_project
 from . import getconfig
@@ -36,10 +38,19 @@ def home():
     return render_template('index.html', projects=projects, **getconfig.renderables)
 
 
-@app.route('/<project>/latest')
-def latest(project):
+@app.route('/<project>/latest/')
+def latest_root(project):
+    return latest(project, '')
+
+@app.route('/<project>/latest/<path>')
+def latest(project, path):
     projForName = {p['name']: p for p in parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)}
     if project not in projForName:
         return 'Project %s not found' % project, 404
-    latestlink = projForName[project]['versions'][-1]['link']
+    latestindex = projForName[project]['versions'][-1]['link']
+    if path:
+        latestlink = '%s/%s' % (os.path.dirname(latestindex), path)
+    else:
+        latestlink = latestindex
+    # Should it be a 302 or something else?
     return redirect(latestlink)

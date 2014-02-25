@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='hostthedocs',
-      version='0.1.0',
+      version='0.2.0',
       description='Makes documentation hosting easy.',
       author='Rob Galanakis',
       author_email='rob.galanakis@gmail.com',
