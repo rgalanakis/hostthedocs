@@ -43,6 +43,7 @@ def home():
 def latest_root(project):
     return latest(project, '')
 
+
 @app.route('/<project>/latest/<path>')
 def latest(project, path):
     parsed_docfiles = parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)
