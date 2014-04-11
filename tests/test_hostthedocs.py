@@ -12,6 +12,14 @@ class Base(unittest.TestCase):
         self.app = hostthedocs.app.test_client()
 
 
+class HomeTests(Base):
+    def test_finds_all(self):
+        pass
+
+    def test_inserts_latest(self):
+        pass
+
+
 class HMFDTests(Base):
 
     def test_readonly(self):
@@ -22,6 +30,12 @@ class HMFDTests(Base):
     def test_missing_zip(self):
         resp = self.app.post('/hmfd')
         self.assertEqual(400, resp.status_code)
+
+    def test_delete(self):
+        pass
+
+    def test_add_new(self):
+        pass
 
 
 @mock.patch('hostthedocs.getconfig.docfiles_dir', DOCFILESDIR)
@@ -43,6 +57,9 @@ class LatestTests(Base):
     def test_latest_certainfile(self):
             self.assert_redirect('/Project2/latest/somefile.html', 302, '/linkroot/Project2/2.0.3/somefile.html')
 
+    def test_missing_returns_404(self):
+        pass
+
 
 class ConfigTests(unittest.TestCase):
 
@@ -50,7 +67,7 @@ class ConfigTests(unittest.TestCase):
         self.gev = hostthedocs.getconfig.serve_gevent
         self.flsk = hostthedocs.getconfig.serve_flask
 
-    def assertCalc(
+    def assert_wsgiserver_calc(
             self,
             shouldbe,
             serve_from_conf=None,
@@ -64,20 +81,20 @@ class ConfigTests(unittest.TestCase):
                 debug_from_conf, wsgi_server_from_conf))
 
     def test_uses_flask_if_gevent_none(self):
-        self.assertCalc(self.flsk)
+        self.assert_wsgiserver_calc(self.flsk)
 
     def test_uses_gevent_if_gevent_available(self):
-        self.assertCalc(self.gev, gevent_module=1)
+        self.assert_wsgiserver_calc(self.gev, gevent_module=1)
 
     def test_uses_flask_if_flask(self):
-        self.assertCalc(self.flsk, wsgi_server_from_conf='flask')
+        self.assert_wsgiserver_calc(self.flsk, wsgi_server_from_conf='flask')
 
     def test_uses_gevent_if_gevent(self):
-        self.assertCalc(self.gev, wsgi_server_from_conf='gevent')
+        self.assert_wsgiserver_calc(self.gev, wsgi_server_from_conf='gevent')
 
     def test_uses_serve_if_provided(self):
         serve = lambda: None
-        self.assertCalc(serve, serve)
+        self.assert_wsgiserver_calc(serve, serve)
 
     def test_uses_flask_if_debug(self):
-        self.assertCalc(self.flsk, debug_from_conf=True)
+        self.assert_wsgiserver_calc(self.flsk, debug_from_conf=True)
