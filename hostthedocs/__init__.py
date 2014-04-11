@@ -47,7 +47,7 @@ def latest_root(project):
 @app.route('/<project>/latest/<path>')
 def latest(project, path):
     parsed_docfiles = parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)
-    proj_for_name = {p['name']: p for p in parsed_docfiles}
+    proj_for_name = dict((p['name'], p) for p in parsed_docfiles)
     if project not in proj_for_name:
         return 'Project %s not found' % project, 404
     latestindex = proj_for_name[project]['versions'][-1]['link']
