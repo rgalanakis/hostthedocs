@@ -99,6 +99,7 @@ class DeleteFilesTests(unittest.TestCase):
         realpath = os.path.join(DOCFILESDIR, 'Project2')
         rmtree.assert_called_once_with(realpath)
 
+
 class SortByVersionTests(unittest.TestCase):
 
     def test_sorts(self):
@@ -109,6 +110,9 @@ class SortByVersionTests(unittest.TestCase):
         self.assertNotEqual(vers, randvers)
         randvers.sort(key=fk.sort_by_version)
         self.assertEqual(vers, randvers)
+
+    def test_sorts_with_nonnumeric(self):
+        pass
 
 
 class ValidationTests(unittest.TestCase):

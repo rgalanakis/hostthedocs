@@ -5,8 +5,9 @@ See conf_template.py for more info.
 import os
 
 try:
+    # noinspection PyPackageRequirements
     import conf
-except ImportError:
+except ImportError:  # pragma: no cover
     conf = None
 
 
@@ -49,8 +50,10 @@ def serve_gevent(app):
     http_server = WSGIServer((host, port), app)
     http_server.serve_forever()
 
+
 def serve_flask(app):
     app.run(host, port, debug)
+
 
 def calc_serve(serve_from_conf, gevent_module, debug_from_conf, wsgi_server_from_conf):
     if serve_from_conf is not None:
@@ -68,6 +71,7 @@ def calc_serve(serve_from_conf, gevent_module, debug_from_conf, wsgi_server_from
         'gevent': serve_gevent,
         'flask': serve_flask}[wsgi_server]
     return servefunc
+
 
 def _calc_serve():
     try:
