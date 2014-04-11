@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 app.config['MAX_CONTENT_LENGTH'] = getconfig.max_content_mb * 1024 * 1024
 
+
 @app.route('/hmfd', methods=['POST', 'DELETE'])
 def hmfd():
     if getconfig.readonly:
@@ -44,10 +45,11 @@ def latest_root(project):
 
 @app.route('/<project>/latest/<path>')
 def latest(project, path):
-    projForName = {p['name']: p for p in parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)}
-    if project not in projForName:
+    parsed_docfiles = parse_docfiles(getconfig.docfiles_dir, getconfig.docfiles_link_root)
+    proj_for_name = {p['name']: p for p in parsed_docfiles}
+    if project not in proj_for_name:
         return 'Project %s not found' % project, 404
-    latestindex = projForName[project]['versions'][-1]['link']
+    latestindex = proj_for_name[project]['versions'][-1]['link']
     if path:
         latestlink = '%s/%s' % (os.path.dirname(latestindex), path)
     else:
