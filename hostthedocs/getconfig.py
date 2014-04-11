@@ -4,6 +4,8 @@ See conf_template.py for more info.
 
 import os
 
+import six
+
 try:
     # noinspection PyPackageRequirements
     import conf
@@ -41,7 +43,7 @@ debug = bool(get('debug', None))
 readonly = get('readonly', False)
 max_content_mb = float(get('max_content_mb', 8))
 
-renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, basestring))
+renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, six.string_types))
 
 
 def serve_gevent(app):

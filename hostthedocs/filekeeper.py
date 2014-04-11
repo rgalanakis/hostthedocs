@@ -14,7 +14,7 @@ def _tryint(s):
 
 def sort_by_version(d):
     v = d['version']
-    intparts = map(_tryint, v.split('.'))
+    intparts = [_tryint(s) for s in v.split('.')]
     return intparts
 
 

@@ -8,5 +8,8 @@ setup(
     author_email='rob.galanakis@gmail.com',
     url='https://github.com/rgalanakis/hostthedocs',
     packages=find_packages(),
-    install_requires=['Flask'],
+    install_requires=[
+        'Flask',
+        'six',
+    ],
 )

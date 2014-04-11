@@ -1,6 +1,6 @@
 import mock
 import unittest
-import urlparse
+import six.moves.urllib.parse as urlparse
 
 import hostthedocs
 from tests import DOCFILESDIR
