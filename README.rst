@@ -159,9 +159,11 @@ FAQ
 I'm sure you have a lot of questions.
 
 Is there a demo available?
-  Yes! Go to http://tech-artists.org:5003/
-  It is a readonly installation, so you can view Host the Doc's measily single RST file,
-  but you can't post or delete your own projects.
+  Not at this time (there used to be), 
+  but as Host the Docs can't just be stuck on Heroku or something,
+  I didn't want to keep it up.
+  
+  If you want to make a public demo, make it a readonly installation through the config.
 
 Who is Host the Docs for?
   The programmer in an enterprise environment,
