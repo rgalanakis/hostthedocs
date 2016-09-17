@@ -11,9 +11,9 @@ from hostthedocs import util
 class UtilityTests(unittest.TestCase):
     def test_extracting_filestream_from_request(self):
         # GIVEN a file to upload.
-        with tempfile.NamedTemporaryFile('w+') as f:
+        with tempfile.NamedTemporaryFile('w+b') as f:
             # GIVEN the file's contents.
-            content = 'foo'
+            content = b'foo'
             f.write(content)
             f.seek(0)
 

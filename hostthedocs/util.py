@@ -13,6 +13,6 @@ def get_filestream_from_request(request):
     :raises ValueError: if no files exist within the request
     """
     try:
-        return request.files.values()[0].stream
+        return list(request.files.values())[0].stream
     except IndexError:
         raise ValueError('Request does not contain uploaded file')
