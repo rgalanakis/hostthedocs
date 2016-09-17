@@ -33,5 +33,5 @@ class UtilityTests(unittest.TestCase):
         builder = EnvironBuilder(method='POST')
         request = Request(builder.get_environ())
 
-        # EXCEPT an exception is thrown when we process the request.
+        # EXPECT an exception is thrown when we process the request.
         util.get_filestream_from_request(request)
