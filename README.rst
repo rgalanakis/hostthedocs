@@ -236,5 +236,8 @@ Does Host the Docs support images?
   You can embed an ``<img>`` tag in your project description HTML,
   if you really want.
 
+.. image:: https://travis-ci.org/rgalanakis/hostthedocs.svg?branch=master
+    :target: https://travis-ci.org/rgalanakis/hostthedocs
+
 .. _conf_template.py: https://github.com/rgalanakis/hostthedocs/blob/master/conf_template.py
 .. _host_my_docs.py: https://github.com/rgalanakis/hostthedocs/blob/master/host_my_docs.py
