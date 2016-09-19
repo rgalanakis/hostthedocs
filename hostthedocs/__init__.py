@@ -2,8 +2,8 @@ import os
 
 from flask import abort, Flask, jsonify, redirect, render_template, request
 
+from . import getconfig, util
 from .filekeeper import delete_files, insert_link_to_latest, parse_docfiles, unpack_project
-from . import getconfig
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def hmfd():
         if not request.files:
             return abort(400, 'Request is missing a zip file.')
         unpack_project(
-            request.files.values()[0].stream,
+            util.get_filestream_from_request(request),
             request.form,
             getconfig.docfiles_dir)
     else:
