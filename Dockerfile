@@ -13,6 +13,9 @@ RUN pip install flask
 RUN pip install six
 RUN pip install conf
 
+ENV HTD_HOST "0.0.0.0"
+ENV HTD_PORT 5000
+
 EXPOSE 5000
 
 CMD [ "python", "runserver.py" ]
