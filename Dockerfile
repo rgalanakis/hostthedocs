@@ -11,6 +11,7 @@ ADD ./tox.ini ./tox.ini
 
 RUN pip install flask
 RUN pip install six
+RUN pip install conf
 
 EXPOSE 5000
 

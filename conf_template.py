@@ -31,9 +31,9 @@ welcome = None
 intro = None
 
 # Host to serve.
-host = None
+host = '0.0.0.0'
 # Port to serve.
-port = None
+port = 5000
 # Whether to serve in debug mode. Only used by Flask.
 debug = None
 
