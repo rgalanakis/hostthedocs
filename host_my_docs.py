@@ -9,10 +9,11 @@ Used also to generate and upload Host the Docs documentation for its demo page.
 import argparse
 import logging
 import os
-import requests
 import sys
 import time
 import zipfile
+import six
+import requests
 
 from tests.test_filekeeper import ZIPFILE
 from hostthedocs import getconfig as cfg
@@ -52,10 +53,11 @@ def _unlink(path):
 def post(host, metadata, zippath):
     address = _makeaddr(host)
     L.info('POSTing to %s\n  metadata: %s\n  zippath: %s', address, metadata, zippath)
+    filename = os.path.basename(zippath)
     got = requests.post(
         address,
         data=metadata,
-        files={"archive": ("test.zip", open(zippath, 'rb'))})
+        files={"archive": (filename, open(zippath, 'rb'))})
     return got
 
 
@@ -111,7 +113,10 @@ def main():
         got = delete(opts.host, metadata, opts.deleteall)
     else:
         got = post(opts.host, metadata, opts.zippath)
-    L.info('Recieved: %s: %s', got.status_code, got.content.replace('\n', ''))
+    content = got.content
+    if six.PY3:
+        content = str(content)
+    L.info('Recieved: %s: %s', got.status_code, content.replace('\n', ''))
     sys.exit(0 if got.status_code == 200 else got.status_code)
 
 

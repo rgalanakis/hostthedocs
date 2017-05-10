@@ -11,5 +11,7 @@ setup(
     install_requires=[
         'Flask',
         'six',
+        'conf',
+        'natsort',
     ],
 )

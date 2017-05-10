@@ -4,11 +4,14 @@ import random
 import shutil
 import tempfile
 import unittest
+import natsort
 
 from hostthedocs import filekeeper as fk
+from hostthedocs import util
 from tests import DOCFILESDIR, THISDIR
 
 ZIPFILE = os.path.join(THISDIR, 'project.zip')
+TARFILE = os.path.join(THISDIR, 'project.tar')
 
 
 class TestParseDocfiles(unittest.TestCase):
@@ -66,11 +69,11 @@ class TestInsertLatest(unittest.TestCase):
 
 
 class TestUnpackProject(unittest.TestCase):
-    def test_unpacks(self):
+    def do_unpacks(self, uploaded_file):
         tempd = tempfile.mkdtemp('hostthedocs_tests')
         self.addCleanup(shutil.rmtree, tempd)
         metad = {'name': 'proj', 'version': '1.1', 'description': 'descr'}
-        fk.unpack_project(ZIPFILE, metad, tempd)
+        fk.unpack_project(uploaded_file, metad, tempd)
 
         def assert_exists(tail, exists=os.path.isdir):
             path = os.path.join(tempd, tail)
@@ -80,6 +83,14 @@ class TestUnpackProject(unittest.TestCase):
         assert_exists('proj/1.1')
         assert_exists('proj/1.1/index.html', os.path.isfile)
         assert_exists('proj/description.txt', os.path.isfile)
+
+    def test_unpack_zip(self):
+        uploaded_file = util.UploadedFile(ZIPFILE, open(ZIPFILE, mode='rb'))
+        self.do_unpacks(uploaded_file)
+
+    def test_unpack_tar(self):
+        uploaded_file = util.UploadedFile(TARFILE, open(TARFILE, mode='rb'))
+        self.do_unpacks(uploaded_file)
 
 
 @mock.patch('shutil.rmtree')
@@ -103,12 +114,15 @@ class DeleteFilesTests(unittest.TestCase):
 class SortByVersionTests(unittest.TestCase):
 
     def test_sorts(self):
-        vers = ['0.9', '1.0', '1.0.0', '1.0.1', '1.1', '1.1.0', '1.1.1', '7.8.9']
+        vers = [
+            '1.1', '1.2alpha', '1.2beta1', '1.2beta2',
+            '1.2rc1', '1.2', '1.2.1', '1.3'
+        ]
         vers = [dict(version=v) for v in vers]
         randvers = list(vers)
         random.shuffle(randvers)
         self.assertNotEqual(vers, randvers)
-        randvers.sort(key=fk.sort_by_version)
+        randvers = natsort.natsorted(randvers, key=fk.sort_by_version)
         self.assertEqual(vers, randvers)
 
     def test_sorts_with_nonnumeric(self):

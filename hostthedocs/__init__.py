@@ -17,11 +17,14 @@ def hmfd():
 
     if request.method == 'POST':
         if not request.files:
-            return abort(400, 'Request is missing a zip file.')
+            return abort(400, 'Request is missing a zip/tar file.')
+        uploaded_file = util.UploadedFile.from_request(request)
         unpack_project(
-            util.get_filestream_from_request(request),
+            uploaded_file,
             request.form,
-            getconfig.docfiles_dir)
+            getconfig.docfiles_dir
+        )
+        uploaded_file.close()
     else:
         assert request.method == 'DELETE'
         delete_files(
