@@ -1,34 +1,30 @@
 import os
 import shutil
 import zipfile
+import natsort
 
 DEFAULT_PROJECT_DESCRIPTION = '<No project description>'
 
 
-def _tryint(s):
-    try:
-        return int(s)
-    except ValueError:
-        return s
-
-
-def sort_by_version(d):
-    v = d['version']
-    intparts = [_tryint(s) for s in v.split('.')]
-    return intparts
+def sort_by_version(x):
+    # See http://natsort.readthedocs.io/en/stable/examples.html
+    return x['version'].replace('.', '~') + 'z'
 
 
 def _get_proj_dict(docfiles_dir, proj_dir, link_root):
-    join = lambda *a: os.path.join(docfiles_dir, proj_dir, *a)
-    allpaths = os.listdir(join())
+    def join_with_default_path(*a):
+        return os.path.join(docfiles_dir, proj_dir, *a)
+
+    allpaths = os.listdir(join_with_default_path())
     versions = [
         dict(version=p, link='%s/%s/%s/index.html' % (link_root, proj_dir, p))
-        for p in allpaths if os.path.isdir(join(p))
+        for p in allpaths if os.path.isdir(join_with_default_path(p))
     ]
-    versions.sort(key=sort_by_version)
+
+    versions = natsort.natsorted(versions, key=sort_by_version)
     descr = DEFAULT_PROJECT_DESCRIPTION
     if 'description.txt' in allpaths:
-        dpath = join('description.txt')
+        dpath = join_with_default_path('description.txt')
         with open(dpath) as f:
             descr = f.read().strip()
     return {'name': proj_dir, 'versions': versions, 'description': descr}
