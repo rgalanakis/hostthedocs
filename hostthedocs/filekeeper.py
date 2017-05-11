@@ -1,8 +1,8 @@
 import os
 import shutil
 import zipfile
-import natsort
 import tarfile
+import natsort
 
 from . import util
 
