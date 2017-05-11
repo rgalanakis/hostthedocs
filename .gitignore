@@ -37,3 +37,9 @@ nosetests.xml
 
 # Intellij
 .idea
+
+
+# Deployed and test documentation
+hostthedocs/static/docfiles/*
+foo.html
+index.html

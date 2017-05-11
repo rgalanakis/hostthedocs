@@ -1,7 +1,11 @@
 import os
 import shutil
 import zipfile
+import tarfile
 import natsort
+
+from . import util
+
 
 DEFAULT_PROJECT_DESCRIPTION = '<No project description>'
 
@@ -40,7 +44,7 @@ def parse_docfiles(docfiles_dir, link_root):
     return result
 
 
-def unpack_project(zippath, proj_metadata, docfiles_dir):
+def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
     projdir = os.path.join(docfiles_dir, proj_metadata['name'])
     verdir = os.path.join(projdir, proj_metadata['version'])
 
@@ -51,9 +55,9 @@ def unpack_project(zippath, proj_metadata, docfiles_dir):
     with open(descrpath, 'w') as f:
         f.write(proj_metadata.get('description', DEFAULT_PROJECT_DESCRIPTION))
 
-    zf = zipfile.ZipFile(zippath)
     # This is insecure, we are only accepting things from trusted sources.
-    zf.extractall(verdir)
+    with util.FileExpander(uploaded_file) as compressed_file:
+        compressed_file.extractall(verdir)
 
 
 def valid_name(s):

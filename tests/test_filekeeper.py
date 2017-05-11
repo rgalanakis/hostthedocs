@@ -7,9 +7,11 @@ import unittest
 import natsort
 
 from hostthedocs import filekeeper as fk
+from hostthedocs import util
 from tests import DOCFILESDIR, THISDIR
 
 ZIPFILE = os.path.join(THISDIR, 'project.zip')
+TARFILE = os.path.join(THISDIR, 'project.tar')
 
 
 class TestParseDocfiles(unittest.TestCase):
@@ -67,11 +69,11 @@ class TestInsertLatest(unittest.TestCase):
 
 
 class TestUnpackProject(unittest.TestCase):
-    def test_unpacks(self):
+    def do_unpacks(self, uploaded_file):
         tempd = tempfile.mkdtemp('hostthedocs_tests')
         self.addCleanup(shutil.rmtree, tempd)
         metad = {'name': 'proj', 'version': '1.1', 'description': 'descr'}
-        fk.unpack_project(ZIPFILE, metad, tempd)
+        fk.unpack_project(uploaded_file, metad, tempd)
 
         def assert_exists(tail, exists=os.path.isdir):
             path = os.path.join(tempd, tail)
@@ -81,6 +83,14 @@ class TestUnpackProject(unittest.TestCase):
         assert_exists('proj/1.1')
         assert_exists('proj/1.1/index.html', os.path.isfile)
         assert_exists('proj/description.txt', os.path.isfile)
+
+    def test_unpack_zip(self):
+        uploaded_file = util.UploadedFile(ZIPFILE, open(ZIPFILE, mode='rb'))
+        self.do_unpacks(uploaded_file)
+
+    def test_unpack_tar(self):
+        uploaded_file = util.UploadedFile(TARFILE, open(TARFILE, mode='rb'))
+        self.do_unpacks(uploaded_file)
 
 
 @mock.patch('shutil.rmtree')
