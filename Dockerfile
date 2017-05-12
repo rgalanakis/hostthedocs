@@ -12,6 +12,7 @@ ADD ./tox.ini ./tox.ini
 RUN pip install flask
 RUN pip install six
 RUN pip install conf
+RUN pip install natsort
 
 ENV HTD_HOST "0.0.0.0"
 ENV HTD_PORT 5000
