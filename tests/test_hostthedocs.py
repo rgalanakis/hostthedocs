@@ -34,6 +34,13 @@ class HMFDTests(Base):
     def test_delete(self):
         pass
 
+    def test_delete_when_disabled(self):
+        with mock.patch('hostthedocs.getconfig.disable_delete', True):
+            self.assertEqual(self.app.delete('/hmfd').status_code, 403)
+
+    def test_method_not_allowed(self):
+        self.assertEqual(self.app.get('/hmfd').status_code, 405)
+
     def test_add_new(self):
         pass
 

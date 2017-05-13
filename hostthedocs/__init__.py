@@ -25,13 +25,18 @@ def hmfd():
             getconfig.docfiles_dir
         )
         uploaded_file.close()
-    else:
-        assert request.method == 'DELETE'
+    elif request.method == 'DELETE':
+        if getconfig.disable_delete:
+            return abort(403)
+
         delete_files(
             request.args['name'],
             request.args.get('version'),
             getconfig.docfiles_dir,
             request.args.get('entire_project'))
+    else:
+        abort(405)
+
     return jsonify({'success': True})
 
 
