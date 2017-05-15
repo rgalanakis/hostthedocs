@@ -15,15 +15,46 @@ def sort_by_version(x):
     return x['version'].replace('.', '~') + 'z'
 
 
+def _is_valid_doc_version(folder):
+    """
+    Test if a version folder contains valid documentation.
+
+    A vaersion folder contains documentation if:
+    - is a directory
+    - contains an `index.html` file
+    """
+    if not os.path.isdir(folder):
+        return False
+    if not os.path.exists(os.path.join(folder, 'index.html')):
+        return False
+
+    return True
+
+
 def _get_proj_dict(docfiles_dir, proj_dir, link_root):
+    """
+    Lookup for the configuration of a project.
+
+    The project configuration is a :class:`dict` with the following data:
+    - "name": the name of the project
+    - "description": the description of the project
+    - "versions": the list of the versions of the documentation. For each
+      version, there is a :class:`dict` with:
+      - "version": name of the version
+      - "link": the relative url of the version
+
+    If no valid versions have been found, returns ``None``.
+    """
     def join_with_default_path(*a):
         return os.path.join(docfiles_dir, proj_dir, *a)
 
     allpaths = os.listdir(join_with_default_path())
     versions = [
         dict(version=p, link='%s/%s/%s/index.html' % (link_root, proj_dir, p))
-        for p in allpaths if os.path.isdir(join_with_default_path(p))
+        for p in allpaths if _is_valid_doc_version(join_with_default_path(p))
     ]
+    if len(versions) == 0:
+        return None
 
     versions = natsort.natsorted(versions, key=sort_by_version)
     descr = DEFAULT_PROJECT_DESCRIPTION
@@ -35,13 +66,24 @@ def _get_proj_dict(docfiles_dir, proj_dir, link_root):
 
 
 def parse_docfiles(docfiles_dir, link_root):
+    """
+    Create the list of the projects.
+
+    The list of projects is computed by walking the `docfiles_dir` and
+    searching for project paths (<project-name>/<version>/index.html)
+    """
     if not os.path.exists(docfiles_dir):
         return {}
 
-    result = [_get_proj_dict(docfiles_dir, f, link_root)
-              for f in sorted(os.listdir(docfiles_dir), key=str.lower)]
+    projects = list()
+    for folder in natsort.natsorted(os.listdir(docfiles_dir), key=str.lower):
+        if not os.path.isdir(os.path.join(docfiles_dir, folder)):
+            continue
+        project = _get_proj_dict(docfiles_dir, folder, link_root)
+        if project is not None:
+            projects.append(project)
 
-    return result
+    return projects
 
 
 def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
