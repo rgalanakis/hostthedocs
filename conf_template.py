@@ -40,6 +40,11 @@ debug = None
 # If True, do not allow anything to be done via /hmfd
 readonly = False
 
+# If true does not allow the delete of a project or a version
+# to be done via /hmfd
+# It however can be done using ssh or similar tools
+disable_delete = False
+
 # Max upload size in MB (float or int)
 # Default to 8, may need to be much larger if you have big docs.
 max_content_mb = None
