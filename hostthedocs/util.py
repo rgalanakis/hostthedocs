@@ -60,9 +60,6 @@ class UploadedFile(object):
         except:
             pass
 
-    def get_extension(self):
-        return os.path.splitext(self._filename)[1]
-
 
 class FileExpander(object):
     """
@@ -76,12 +73,15 @@ class FileExpander(object):
     - tar
     """
 
+    ZIP_EXTENSIONS = ('.zip', )
+    TAR_EXTENSIONS = ('.tar', '.tgz', '.tar.gz', '.tar.bz2')
+
     def __init__(self, uploaded_file):
         self._file = uploaded_file
         self._handle = None
 
-    @staticmethod
-    def detect_compression_method(extension):
+    @classmethod
+    def detect_compression_method(cls, filename):
         """
         Attempt to detect the compression method from the filename extension.
 
@@ -89,15 +89,15 @@ class FileExpander(object):
         :return: The compression method ('zip' or 'tar').
         :raises ValueError: If fails to detect the compression method.
         """
-        if extension == '.zip':
+        if any(filename.endswith(ext) for ext in cls.ZIP_EXTENSIONS):
             return 'zip'
-        if extension in ['.tar', '.tgz', '.tar.gz', '.tar.bz2']:
+        if any(filename.endswith(ext) for ext in cls.TAR_EXTENSIONS):
             return 'tar'
 
-        raise ValueError('Unknown compression method %s' % extension)
+        raise ValueError('Unknown compression method for %s' % filename)
 
     def __enter__(self):
-        method = self.detect_compression_method(self._file.get_extension())
+        method = self.detect_compression_method(self._file.get_filename())
         if method == 'zip':
             self._handle = zipfile.ZipFile(self._file.get_stream())
         elif method == 'tar':

@@ -12,6 +12,8 @@ from tests import DOCFILESDIR, THISDIR
 
 ZIPFILE = os.path.join(THISDIR, 'project.zip')
 TARFILE = os.path.join(THISDIR, 'project.tar')
+TARGZFILE = os.path.join(THISDIR, 'project.tar.gz')
+TARBZ2FILE = os.path.join(THISDIR, 'project.tar.bz2')
 
 
 class TestParseDocfiles(unittest.TestCase):
@@ -90,6 +92,14 @@ class TestUnpackProject(unittest.TestCase):
 
     def test_unpack_tar(self):
         uploaded_file = util.UploadedFile(TARFILE, open(TARFILE, mode='rb'))
+        self.do_unpacks(uploaded_file)
+
+    def test_unpack_tar_gz(self):
+        uploaded_file = util.UploadedFile(TARGZFILE, open(TARGZFILE, mode='rb'))
+        self.do_unpacks(uploaded_file)
+
+    def test_unpack_tar_bz(self):
+        uploaded_file = util.UploadedFile(TARBZ2FILE, open(TARBZ2FILE, mode='rb'))
         self.do_unpacks(uploaded_file)
 
 
