@@ -15,11 +15,11 @@ def sort_by_version(x):
     return x['version'].replace('.', '~') + 'z'
 
 
-def _is_valid_doc_folder(folder):
+def _is_valid_doc_version(folder):
     """
-    Test if a folder contains documentation.
+    Test if a version folder contains valid documentation.
 
-    A folder contains documentation if:
+    A vaersion folder contains documentation if:
     - is a directory
     - contains an `index.html` file
     """
@@ -51,7 +51,7 @@ def _get_proj_dict(docfiles_dir, proj_dir, link_root):
     allpaths = os.listdir(join_with_default_path())
     versions = [
         dict(version=p, link='%s/%s/%s/index.html' % (link_root, proj_dir, p))
-        for p in allpaths if _is_valid_doc_folder(join_with_default_path(p))
+        for p in allpaths if _is_valid_doc_version(join_with_default_path(p))
     ]
     if len(versions) == 0:
         return None
