@@ -70,21 +70,43 @@ class TestInsertLatest(unittest.TestCase):
         self.assertEqual(projs[0]['versions'][-1]['link'], 'SPAM')
 
 
-class TestUnpackProject(unittest.TestCase):
+class BaseTestUnpackProject(unittest.TestCase):
+
+    def make_temp_dir(self):
+        self._tempd = tempfile.mkdtemp('hostthedocs_tests')
+        self.addCleanup(shutil.rmtree, self._tempd)
+        return self._tempd
+
+    def assert_exists(self, tail, exists=os.path.isdir):
+        path = os.path.join(self._tempd, tail)
+        self.assertTrue(exists(path), '%s does not exist' % path)
+
+    def assert_not_exists(self, tail):
+        path = os.path.join(self._tempd, tail)
+        self.assertFalse(os.path.exists(path), '%s does not exist' % path)
+
+    def assert_contains(self, tail, expected_data, open_mode='r'):
+        self.assert_exists(tail, exists=os.path.isfile)
+
+        path = os.path.join(self._tempd, tail)
+        with open(path, mode=open_mode) as f:
+            data = f.read()
+        self.assertEqual(
+            data, expected_data,
+            'File %s does not contains "%s"' % (path, expected_data)
+        )
+
+
+class TestUnpackProjectFile(BaseTestUnpackProject):
     def do_unpacks(self, uploaded_file):
-        tempd = tempfile.mkdtemp('hostthedocs_tests')
-        self.addCleanup(shutil.rmtree, tempd)
+        tempd = self.make_temp_dir()
         metad = {'name': 'proj', 'version': '1.1', 'description': 'descr'}
         fk.unpack_project(uploaded_file, metad, tempd)
 
-        def assert_exists(tail, exists=os.path.isdir):
-            path = os.path.join(tempd, tail)
-            self.assertTrue(exists(path), '%s does not exist' % path)
-
-        assert_exists('proj')
-        assert_exists('proj/1.1')
-        assert_exists('proj/1.1/index.html', os.path.isfile)
-        assert_exists('proj/description.txt', os.path.isfile)
+        self.assert_exists('proj')
+        self.assert_exists('proj/1.1')
+        self.assert_exists('proj/1.1/index.html', exists=os.path.isfile)
+        self.assert_exists('proj/description.txt', exists=os.path.isfile)
 
     def test_unpack_zip(self):
         uploaded_file = util.UploadedFile(ZIPFILE, open(ZIPFILE, mode='rb'))
@@ -101,6 +123,47 @@ class TestUnpackProject(unittest.TestCase):
     def test_unpack_tar_bz(self):
         uploaded_file = util.UploadedFile(TARBZ2FILE, open(TARBZ2FILE, mode='rb'))
         self.do_unpacks(uploaded_file)
+
+
+class TestUnpackProjectDescr(BaseTestUnpackProject):
+    def make_uploaded_file(self):
+        return util.UploadedFile(ZIPFILE, open(ZIPFILE, mode='rb'))
+
+    def test_ensure_description_file(self):
+        uploaded_file = self.make_uploaded_file()
+        tempd = self.make_temp_dir()
+        metad = {'name': 'proj', 'version': '1.1', 'description': 'descr'}
+        fk.unpack_project(uploaded_file, metad, tempd)
+
+        self.assert_contains('proj/description.txt', metad['description'])
+
+    def test_update_description_file(self):
+        uploaded_file = self.make_uploaded_file()
+        tempd = self.make_temp_dir()
+        metad = {'name': 'proj', 'version': '1.1', 'description': 'descr_old'}
+        fk.unpack_project(uploaded_file, metad, tempd)
+
+        metad = {'name': 'proj', 'version': '1.1', 'description': 'descr_new'}
+        fk.unpack_project(uploaded_file, metad, tempd)
+        self.assert_contains('proj/description.txt', metad['description'])
+
+    def test_no_update_description_file(self):
+        uploaded_file = self.make_uploaded_file()
+        tempd = self.make_temp_dir()
+        metad = {'name': 'proj', 'version': '1.1', 'description': 'descr_old'}
+        fk.unpack_project(uploaded_file, metad, tempd)
+
+        metad = {'name': 'proj', 'version': '1.1'}
+        fk.unpack_project(uploaded_file, metad, tempd)
+        self.assert_contains('proj/description.txt', 'descr_old')
+
+    def test_no_description_file(self):
+        uploaded_file = self.make_uploaded_file()
+        tempd = self.make_temp_dir()
+        metad = {'name': 'proj', 'version': '1.1'}
+        fk.unpack_project(uploaded_file, metad, tempd)
+
+        self.assert_not_exists('proj/description.txt')
 
 
 @mock.patch('shutil.rmtree')

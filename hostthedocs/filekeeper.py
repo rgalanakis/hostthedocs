@@ -7,7 +7,7 @@ import natsort
 from . import util
 
 
-DEFAULT_PROJECT_DESCRIPTION = '<No project description>'
+DEFAULT_PROJECT_DESCRIPTION = 'No project description'
 
 
 def sort_by_version(x):
@@ -93,9 +93,13 @@ def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
     if not os.path.isdir(verdir):
         os.makedirs(verdir)
 
-    descrpath = os.path.join(projdir, 'description.txt')
-    with open(descrpath, 'w') as f:
-        f.write(proj_metadata.get('description', DEFAULT_PROJECT_DESCRIPTION))
+    # Overwrite project description only if a (non empty) new one has been
+    # provided
+    descr = proj_metadata.get('description', '')
+    if len(descr) > 0:
+        descrpath = os.path.join(projdir, 'description.txt')
+        with open(descrpath, 'w') as f:
+            f.write(descr)
 
     # This is insecure, we are only accepting things from trusted sources.
     with util.FileExpander(uploaded_file) as compressed_file:
