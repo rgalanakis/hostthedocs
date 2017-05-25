@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    <script type="text/javascript">
+        function gotodocs(obj)
+        {
+         var selectedValue = obj.options[obj.selectedIndex].value;
+         window.location.href = selectedValue;
+        }
+    </script>
+
     <div class="container">
 
         <div class="jumbotron">
@@ -25,11 +33,16 @@
                             <p><a href="{{ version.link }}">
                                 {% if version.version == 'latest' %}
                                     Latest
-                                {% else %}
-                                    Version {{ version.version }}
                                 {% endif %}
                             </a></p>
                         {% endfor %}
+                        <select name="{{ project.name }}" onchange="gotodocs(this);">
+                        {% for version in project.versions %}
+                            {% if version.version != 'latest' %}
+                                <option value="{{ version.link }}">{{ version.version }}</option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
                         <!--<p><a href="#" class="btn btn-primary">Buy Now!</a>  <a href="#" class="btn btn-default">More Info</a>-->
                         <!--</p>-->
                     </div>
