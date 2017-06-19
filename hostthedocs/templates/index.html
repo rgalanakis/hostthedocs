@@ -30,13 +30,17 @@
                         <h3>{{ project.name }}</h3>
                         <p>{{ project.description|safe }}</p>
                         {% for version in project.versions %}
-                            <p><a href="{{ version.link }}">
-                                {% if version.version == 'latest' %}
-                                    Latest
-                                {% endif %}
+                            {% if version.version == 'latest' %}
+                            <p><a href="{{ version.link }}"
+                                  class="btn btn-primary btn-md btn-block"
+                                  role="button">
+                                    <strong>Latest</strong>
                             </a></p>
+                            {% endif %}
                         {% endfor %}
-                        <select name="{{ project.name }}" onchange="gotodocs(this);">
+                        <select name="{{ project.name }}" onchange="gotodocs(this);"
+                                class="btn btn-success dropdown-toggle" type="button"
+                                role="menu" aria-haspopup="true" aria-expanded="false">
                         {% for version in project.versions %}
                             {% if version.version != 'latest' %}
                                 <option value="{{ version.link }}">{{ version.version }}</option>
