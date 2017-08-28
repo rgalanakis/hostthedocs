@@ -41,7 +41,7 @@
                         <select name="{{ project.name }}" onchange="gotodocs(this);"
                                 class="btn btn-success dropdown-toggle" type="button"
                                 role="menu" aria-haspopup="true" aria-expanded="false">
-                        {% for version in project.versions %}
+                        {% for version in project.versions | reverse %}
                             {% if version.version != 'latest' %}
                                 <option value="{{ version.link }}">{{ version.version }}</option>
                             {% endif %}
