@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3-alpine
 
 ADD ./hostthedocs/ ./hostthedocs/
 ADD ./.travis.yml ./.travis.yml
@@ -8,11 +8,11 @@ ADD ./host_my_docs.py ./host_my_docs.py
 ADD ./runserver.py ./runserver.py
 ADD ./setup.py ./setup.py
 ADD ./tox.ini ./tox.ini
+ADD ./Pipfile ./Pipfile
+ADD ./Pipfile.lock ./Pipfile.lock
 
-RUN pip install flask
-RUN pip install six
-RUN pip install conf
-RUN pip install natsort
+RUN pip install pipenv
+RUN pipenv install --deploy --system
 
 ENV HTD_HOST "0.0.0.0"
 ENV HTD_PORT 5000
