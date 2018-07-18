@@ -4,6 +4,7 @@ import zipfile
 import tarfile
 import natsort
 
+from io import open
 from . import util
 
 
@@ -60,7 +61,7 @@ def _get_proj_dict(docfiles_dir, proj_dir, link_root):
     descr = DEFAULT_PROJECT_DESCRIPTION
     if 'description.txt' in allpaths:
         dpath = join_with_default_path('description.txt')
-        with open(dpath) as f:
+        with open(dpath, 'r', encoding='utf-8') as f:
             descr = f.read().strip()
     return {'name': proj_dir, 'versions': versions, 'description': descr}
 
@@ -98,7 +99,7 @@ def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
     descr = proj_metadata.get('description', '')
     if len(descr) > 0:
         descrpath = os.path.join(projdir, 'description.txt')
-        with open(descrpath, 'w') as f:
+        with open(descrpath, 'w', encoding='utf-8') as f:
             f.write(descr)
 
     # This is insecure, we are only accepting things from trusted sources.
