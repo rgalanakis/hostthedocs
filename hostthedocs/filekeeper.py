@@ -4,7 +4,7 @@ import zipfile
 import tarfile
 import natsort
 
-from io import open
+from codecs import open
 from . import util
 
 
