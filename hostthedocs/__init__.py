@@ -18,7 +18,7 @@ def hmfd():
     if request.method == 'POST':
         if not request.files:
             return abort(400, 'Request is missing a zip/tar file.')
-        uploaded_file = util.UploadedFile.from_request(request)
+        uploaded_file = util.file_from_request(request)
         unpack_project(
             uploaded_file,
             request.form,

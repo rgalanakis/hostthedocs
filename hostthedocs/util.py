@@ -10,56 +10,24 @@ import tarfile
 
 logger = logging.getLogger()
 
-
-class UploadedFile(object):
+def file_from_request(request):
     """
-    UploadedFile represents a file uploaded during a POST request.
+    Get the uploaded file from a POST request, which should contain exactly one file.
+
+    :param werkzeug.wrappers.BaseRequest request: The POST request.
+    :return: The instantiated UploadedFile.
+    :raises ValueError: if no files exist within the request.
     """
+    uploaded_files = list(request.files.values())
+    if len(uploaded_files) > 1:
+        logger.warning(
+            'Only one file can be uploaded for each request. '
+            'Only the first file will be used.'
+        )
+    elif len(uploaded_files) == 0:
+        raise ValueError('Request does not contain uploaded file')
 
-    def __init__(self, filename, stream):
-        """Instantiate an UploadedFile
-
-        :param str filename: The name of the file.
-        :param stream: The open file stream.
-        """
-        self._filename = filename
-        self._stream = stream
-
-    @classmethod
-    def from_request(cls, request):
-        """
-        Instantiate an UploadedFile from the first file in a request.
-
-        :param werkzeug.wrappers.BaseRequest request: The POST request.
-        :return: The instantiated UploadedFile.
-        :raises ValueError: if no files exist within the request.
-        """
-        uploaded_files = list(request.files.values())
-        if len(uploaded_files) > 1:
-            logger.warning(
-                'Only one file can be uploaded for each request. '
-                'Only the first file will be used.'
-            )
-        elif len(uploaded_files) == 0:
-            raise ValueError('Request does not contain uploaded file')
-
-        current_file = uploaded_files[0]
-        return cls(current_file.filename, current_file.stream)
-
-    def get_filename(self):
-        return self._filename
-
-    def get_stream(self):
-        return self._stream
-
-    def close(self):
-        """close the file stream
-        """
-        try:
-            self._stream.close()
-        except:
-            pass
-
+    return uploaded_files[0]
 
 class FileExpander(object):
     """
@@ -97,11 +65,11 @@ class FileExpander(object):
         raise ValueError('Unknown compression method for %s' % filename)
 
     def __enter__(self):
-        method = self.detect_compression_method(self._file.get_filename())
+        method = self.detect_compression_method(self._file.filename)
         if method == 'zip':
-            self._handle = zipfile.ZipFile(self._file.get_stream())
+            self._handle = zipfile.ZipFile(self._file)
         elif method == 'tar':
-            self._handle = tarfile.open(fileobj=self._file.get_stream(), mode='r:*')
+            self._handle = tarfile.open(fileobj=self._file, mode='r:*')
         else:
             raise ValueError('Unsupported method %s' % method)
 
