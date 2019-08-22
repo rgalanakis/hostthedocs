@@ -63,5 +63,4 @@ def latest(project, path):
         latestlink = '%s/%s' % (os.path.dirname(latestindex), path)
     else:
         latestlink = latestindex
-    # Should it be a 302 or something else?
-    return redirect(latestlink)
+    return redirect('/' + latestlink)

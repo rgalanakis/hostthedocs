@@ -51,12 +51,15 @@ class LatestTests(Base):
 
     def assert_redirect(self, path, code, location):
         resp = self.app.get(path)
-        self.assertEqual(resp.status_code, code)
+        if isinstance(code, list):
+            self.assertIn(resp.status_code, code)
+        else:
+            self.assertEqual(resp.status_code, code)
         gotloc = urlparse.urlsplit(dict(resp.headers)['Location']).path
         self.assertEqual(gotloc, location)
 
     def test_latest_noslash(self):
-        self.assert_redirect('/foo/latest', 301, '/foo/latest/')
+        self.assert_redirect('/foo/latest', [301, 308], '/foo/latest/')
 
     def test_latest_root(self):
             self.assert_redirect('/Project2/latest/', 302, '/linkroot/Project2/2.0.3/index.html')
