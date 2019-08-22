@@ -22,10 +22,10 @@ class UtilityTests(unittest.TestCase):
             request = Request(builder.get_environ())
 
             # WHEN we process the request.
-            filestream = util.UploadedFile.from_request(request)
+            filestream = util.file_from_request(request)
 
             # THEN the file-stream should correspond to the provided file.
-            self.assertEqual(content, filestream.get_stream().read())
+            self.assertEqual(content, filestream.read())
 
     @raises(ValueError)
     def test_exception_thrown_if_request_contains_no_file(self):
@@ -34,4 +34,4 @@ class UtilityTests(unittest.TestCase):
         request = Request(builder.get_environ())
 
         # EXPECT an exception is thrown when we process the request.
-        util.UploadedFile.from_request(request)
+        util.file_from_request(request)

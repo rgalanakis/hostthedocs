@@ -5,6 +5,7 @@ import shutil
 import tempfile
 import unittest
 import natsort
+import werkzeug.datastructures
 
 from hostthedocs import filekeeper as fk
 from hostthedocs import util
@@ -15,6 +16,10 @@ TARFILE = os.path.join(THISDIR, 'project.tar')
 TARGZFILE = os.path.join(THISDIR, 'project.tar.gz')
 TARBZ2FILE = os.path.join(THISDIR, 'project.tar.bz2')
 
+def make_uploaded_file(filename=ZIPFILE):
+    stream = open(filename, 'rb')
+    basename = os.path.basename(filename)
+    return werkzeug.datastructures.FileStorage(stream=stream, filename=basename)
 
 class TestParseDocfiles(unittest.TestCase):
     def test_parses(self):
@@ -109,28 +114,25 @@ class TestUnpackProjectFile(BaseTestUnpackProject):
         self.assert_exists('proj/description.txt', exists=os.path.isfile)
 
     def test_unpack_zip(self):
-        uploaded_file = util.UploadedFile(ZIPFILE, open(ZIPFILE, mode='rb'))
+        uploaded_file = make_uploaded_file(ZIPFILE)
         self.do_unpacks(uploaded_file)
 
     def test_unpack_tar(self):
-        uploaded_file = util.UploadedFile(TARFILE, open(TARFILE, mode='rb'))
+        uploaded_file = make_uploaded_file(TARFILE)
         self.do_unpacks(uploaded_file)
 
     def test_unpack_tar_gz(self):
-        uploaded_file = util.UploadedFile(TARGZFILE, open(TARGZFILE, mode='rb'))
+        uploaded_file = make_uploaded_file(TARGZFILE)
         self.do_unpacks(uploaded_file)
 
     def test_unpack_tar_bz(self):
-        uploaded_file = util.UploadedFile(TARBZ2FILE, open(TARBZ2FILE, mode='rb'))
+        uploaded_file = make_uploaded_file(TARBZ2FILE)
         self.do_unpacks(uploaded_file)
 
 
 class TestUnpackProjectDescr(BaseTestUnpackProject):
-    def make_uploaded_file(self):
-        return util.UploadedFile(ZIPFILE, open(ZIPFILE, mode='rb'))
-
     def test_ensure_description_file(self):
-        uploaded_file = self.make_uploaded_file()
+        uploaded_file = make_uploaded_file()
         tempd = self.make_temp_dir()
         metad = {'name': 'proj', 'version': '1.1', 'description': 'descr'}
         fk.unpack_project(uploaded_file, metad, tempd)
@@ -138,7 +140,7 @@ class TestUnpackProjectDescr(BaseTestUnpackProject):
         self.assert_contains('proj/description.txt', metad['description'])
 
     def test_update_description_file(self):
-        uploaded_file = self.make_uploaded_file()
+        uploaded_file = make_uploaded_file()
         tempd = self.make_temp_dir()
         metad = {'name': 'proj', 'version': '1.1', 'description': 'descr_old'}
         fk.unpack_project(uploaded_file, metad, tempd)
@@ -148,7 +150,7 @@ class TestUnpackProjectDescr(BaseTestUnpackProject):
         self.assert_contains('proj/description.txt', metad['description'])
 
     def test_no_update_description_file(self):
-        uploaded_file = self.make_uploaded_file()
+        uploaded_file = make_uploaded_file()
         tempd = self.make_temp_dir()
         metad = {'name': 'proj', 'version': '1.1', 'description': 'descr_old'}
         fk.unpack_project(uploaded_file, metad, tempd)
@@ -158,7 +160,7 @@ class TestUnpackProjectDescr(BaseTestUnpackProject):
         self.assert_contains('proj/description.txt', 'descr_old')
 
     def test_no_description_file(self):
-        uploaded_file = self.make_uploaded_file()
+        uploaded_file = make_uploaded_file()
         tempd = self.make_temp_dir()
         metad = {'name': 'proj', 'version': '1.1'}
         fk.unpack_project(uploaded_file, metad, tempd)
