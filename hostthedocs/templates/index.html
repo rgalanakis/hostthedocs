@@ -52,6 +52,11 @@
                     </div>
                 </div>
             </div>
+            {% if loop.index % 4 == 0 %}
+                {# Bootstrap 3, set up for 4 columns each row, but they can be different heights. To make them
+                   wrap properly we add a clearfix empty div at the end of each "row"#}
+                <div class="clearfix"></div>
+            {% endif %}
             {% endfor %}
 
         </div>
