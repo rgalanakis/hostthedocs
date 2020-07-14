@@ -48,7 +48,10 @@ renderables = dict((k, v) for (k, v) in globals().items() if isinstance(v, six.s
 
 
 def serve_gevent(app):
-    from gevent.pywsgi import WSGIServer
+    try:
+        from gevent.pywsgi import WSGIServer
+    except ModuleNotFoundError:
+        from gevent.wsgi import WSGIServer
 
     http_server = WSGIServer((host, port), app)
     http_server.serve_forever()
