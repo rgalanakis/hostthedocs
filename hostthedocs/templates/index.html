@@ -43,7 +43,7 @@
                                 role="menu" aria-haspopup="true" aria-expanded="false">
                         {% for version in project.versions | reverse %}
                             {% if version.version != 'latest' %}
-                                <option value="{{ version.link }}">{{ version.version }}</option>
+                                <option value="{{ version.normalized_link }}">{{ version.version }}</option>
                             {% endif %}
                         {% endfor %}
                         </select>

@@ -62,13 +62,13 @@ class LatestTests(Base):
         self.assert_redirect('/foo/latest', [301, 308], '/foo/latest/')
 
     def test_latest_root(self):
-            self.assert_redirect('/Project2/latest/', 302, '/linkroot/Project2/2.0.3/index.html')
+            self.assert_redirect('/Project2/latest/', 302, '/Project2/2.0.3/index.html')
 
     def test_latest_certainfile(self):
-            self.assert_redirect('/Project2/latest/somefile.html', 302, '/linkroot/Project2/2.0.3/somefile.html')
+            self.assert_redirect('/Project2/latest/somefile.html', 302, '/Project2/2.0.3/somefile.html')
 
     def test_latest_nestedfile(self):
-            self.assert_redirect('/Project2/latest/foo/bar/somefile.html', 302, '/linkroot/Project2/2.0.3/foo/bar/somefile.html')
+            self.assert_redirect('/Project2/latest/foo/bar/somefile.html', 302, '/Project2/2.0.3/foo/bar/somefile.html')
 
     def test_missing_returns_404(self):
         pass
