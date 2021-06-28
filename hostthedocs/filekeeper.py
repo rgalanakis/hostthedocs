@@ -3,6 +3,7 @@ import shutil
 import zipfile
 import tarfile
 import natsort
+import tempfile
 
 from codecs import open
 from . import util
@@ -87,6 +88,28 @@ def parse_docfiles(docfiles_dir, link_root):
     return projects
 
 
+def find_root_dir(compressed_file, file_ext = ".html"):
+    """
+    Determines the documentation root directory by searching the top-level index file.
+    """
+    
+    if isinstance(compressed_file, zipfile.ZipFile):
+        index_files = [member.filename for member in compressed_file.infolist()
+                       if not member.is_dir() and os.path.basename(member.filename) == f"index{file_ext}"]
+    elif isinstance(compressed_file, tarfile.TarFile):
+        index_files = [member.name for member in compressed_file.getmembers()
+                       if member.isfile() and os.path.basename(member.name) == f"index{file_ext}"]
+    else:
+        raise TypeError(f"Invalid archive file type: {type(compressed_file)}")
+
+    if not index_files:
+        raise FileNotFoundError("Failed to find root index file!")
+
+    root_index_file = sorted(index_files, key = lambda filename: len(filename.split(os.sep)))[0]
+
+    return os.path.dirname(root_index_file)
+
+
 def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
     projdir = os.path.join(docfiles_dir, proj_metadata['name'])
     verdir = os.path.join(projdir, proj_metadata['version'])
@@ -104,7 +127,19 @@ def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
 
     # This is insecure, we are only accepting things from trusted sources.
     with util.FileExpander(uploaded_file) as compressed_file:
-        compressed_file.extractall(verdir)
+        # Determine documentation root dir by finding top-level index file
+        root_dir = find_root_dir(compressed_file)
+
+        # Extract full archive to temporary directory
+        temp_dir = tempfile.mkdtemp()
+        compressed_file.extractall(temp_dir)
+
+        # Then, only move root directory to target dir
+        shutil.rmtree(verdir)                                  # clear possibly existing target dir
+        shutil.move(os.path.join(temp_dir, root_dir), verdir)  # only move documentation root dir
+
+        if os.path.isdir(temp_dir):  # cleanup temporary directory (if it still exists)
+            shutil.rmtree(temp_dir)
 
 
 def valid_name(s):
