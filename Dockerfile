@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3.6-alpine
 RUN pip install pipenv
 
 ADD ./Pipfile ./Pipfile
