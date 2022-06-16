@@ -111,7 +111,12 @@ def find_root_dir(compressed_file, file_ext = ".html"):
 
 
 def unpack_project(uploaded_file, proj_metadata, docfiles_dir):
-    projdir = os.path.join(docfiles_dir, proj_metadata['name'])
+    # Try to join docfiles with url_name key which may exist
+    try:
+        projdir = os.path.join(docfiles_dir, proj_metadata['url_name'])
+    # If nonexistent, just go by project name
+    except KeyError:
+        projdir = os.path.join(docfiles_dir, proj_metadata['name'])
     verdir = os.path.join(projdir, proj_metadata['version'])
 
     if not os.path.isdir(verdir):
