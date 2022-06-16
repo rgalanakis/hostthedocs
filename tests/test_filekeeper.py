@@ -11,6 +11,7 @@ from hostthedocs import filekeeper as fk
 from hostthedocs import util
 from tests import DOCFILESDIR, THISDIR
 
+
 ZIPFILE = os.path.join(THISDIR, 'project.zip')
 TARFILE = os.path.join(THISDIR, 'project.tar')
 TARGZFILE = os.path.join(THISDIR, 'project.tar.gz')
@@ -22,6 +23,7 @@ def make_uploaded_file(filename=ZIPFILE):
     return werkzeug.datastructures.FileStorage(stream=stream, filename=basename)
 
 class TestParseDocfiles(unittest.TestCase):
+
     def test_parses(self):
         result = fk.parse_docfiles(DOCFILESDIR, 'static')
         ideal = [
@@ -30,8 +32,10 @@ class TestParseDocfiles(unittest.TestCase):
                 'description': 'Project description.',
                 'versions': [
                     {'version': '1.0.1',
+                     'normalized_link': 'project1/1.0.1/index.html',
                      'link': 'static/project1/1.0.1/index.html'},
                     {'version': '1.2.0',
+                     'normalized_link': 'project1/1.2.0/index.html',
                      'link': 'static/project1/1.2.0/index.html'}
                 ]
             },
@@ -41,6 +45,7 @@ class TestParseDocfiles(unittest.TestCase):
                 'description': fk.DEFAULT_PROJECT_DESCRIPTION,
                 'versions': [
                     {'version': '2.0.3',
+                     'normalized_link': 'Project2/2.0.3/index.html',
                      'link': 'static/Project2/2.0.3/index.html'},
                 ]
             },
@@ -49,6 +54,7 @@ class TestParseDocfiles(unittest.TestCase):
                 'description': fk.DEFAULT_PROJECT_DESCRIPTION,
                 'versions': [
                     {'version': '3.3.3',
+                     'normalized_link': 'project3/3.3.3/index.html',
                      'link': 'static/project3/3.3.3/index.html'},
                 ]
             }

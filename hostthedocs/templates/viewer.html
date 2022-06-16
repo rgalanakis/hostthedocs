@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+
+    <!-- Bootstrap -->
+    <link href="/static/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        iframe#ifrm {
+            width: 100%;
+            height: calc(100% - 50px);
+            position: fixed;
+            top: 50px;
+        }
+
+        .container {
+            height: 50px;
+            position: relative;
+        }
+
+        #stuff {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+    </style>
+
+  </head>
+  <body>
+    <script type="text/javascript">
+        var projects = {{ all_projects | tojson }};
+
+        function currentpage()
+        {
+            var path = currentpath();
+            var root = window.location.origin;
+            return root + path;
+        }
+
+        function currentpath()
+        {
+            var direct_path = document.getElementById('ifrm').contentWindow.location.pathname;
+            return direct_path.replace(/^\/static\/docfiles/,'');
+        }
+
+        function iframe_changed()
+        {
+            window.history.pushState({},"",currentpath())
+            links = document.getElementById('ifrm').contentDocument.getElementsByTagName('a');
+            Array.from(links).filter(
+                el => el.origin != window.location.origin
+            ).forEach(
+                el => el.target = "_blank"
+            );
+        }
+
+        function gotodocs(obj)
+        {
+            var selectedValue = obj.options[obj.selectedIndex].value;
+            var el = document.getElementById('ifrm');
+            el.src = "../../" + selectedValue;
+        }
+
+        function projectselect(obj)
+        {
+            var selectedValue = obj.options[obj.selectedIndex].value;
+            var selectedProj = projects[selectedValue];
+            var el = document.getElementById('versions');
+            el.options.length = 0;
+            selectedProj.versions.filter(
+                version => version.version != 'latest'
+            ).reverse().forEach(
+                version => el.appendChild(new Option(version.version, version.link))
+            );
+
+
+            var ifrm = document.getElementById('ifrm');
+            var link = selectedProj.versions[selectedProj.versions.length - 1].link;
+            ifrm.src = '/' + link;
+        }
+    </script>
+
+    <div class="container">
+        <!-- /.row -->
+
+        <div id="stuff" class="row text-center">
+            <select name="projects" onchange="projectselect(this);"
+                    class="btn btn-success dropdown-toggle" type="button"
+                    role="menu" aria-haspopup="true" aria-expanded="false">
+            {% for name, details in all_projects.items() %}
+                {% if name == current_project.name %}
+                <option value="{{ name }}" selected>{{ name }}</option>
+                {% else %}
+                <option value="{{ name }}">{{ name }}</option>
+                {% endif %}
+            {% endfor %}
+            </select >
+
+            <select id="versions" name="versions" onchange="gotodocs(this);"
+                    class="btn btn-success dropdown-toggle" type="button"
+                    role="menu" aria-haspopup="true" aria-expanded="false">
+            {% for version in current_project.versions | reverse %}
+                {% if version.version == current_version %}
+                    <option value="{{ version.link }}" selected>{{ version.version }}</option>
+                {% elif version.version != 'latest' %}
+                    <option value="{{ version.link }}">{{ version.version }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+        </div>
+        <!-- /.row -->
+
+    </div>
+
+    <iframe src="/{{ initial_path }}" id="ifrm" onLoad="iframe_changed()">
+    <!-- /.container -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
+  </body>
+</html>
